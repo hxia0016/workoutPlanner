@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.workoutplanner">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,17 +13,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WorkOutPlanner">
         <activity
-            android:name=".UserSignIn.ForgetPassword"
-            android:exported="false" />
+            android:name=".MainActivity"
+            android:theme="@style/Theme.WorkOutPlanner.NoActionBar"
+            android:exported="true"/>
+
         <activity
-            android:name=".HomePage"
+            android:name=".UserSignIn.ForgetPassword"
             android:exported="false" />
         <activity
             android:name=".UserSignIn.RegisterUser"
             android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            <activity
+                android:name=".UserSignIn.LoginUser"
+                android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

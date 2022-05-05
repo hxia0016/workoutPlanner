@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.workoutplanner.HomePage;
 import com.example.workoutplanner.MainActivity;
 import com.example.workoutplanner.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -68,7 +67,7 @@ public class ForgetPassword extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Toast.makeText(ForgetPassword.this, "Verification sent, please check your email!",
                             Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(ForgetPassword.this, MainActivity.class));
+                    startActivity(new Intent(ForgetPassword.this, LoginUser.class));
                     progressBar.setVisibility(View.GONE);
                 }
                 else{

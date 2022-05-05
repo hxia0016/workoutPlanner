@@ -1,133 +1,45 @@
 package com.example.workoutplanner;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.workoutplanner.UserSignIn.ForgetPassword;
-import com.example.workoutplanner.UserSignIn.RegisterUser;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+import com.example.workoutplanner.databinding.ActivityMainBinding;
 
-    private TextView register, forget;
-    private EditText userEmail, userPassword;
-    private Button login;
-
-    private FirebaseAuth mAuth;
-    private ProgressBar progressBar;
-
+public class MainActivity extends AppCompatActivity {
+    private ActivityMainBinding binding;
+    private AppBarConfiguration mAppBarConfiguration;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
-        register = (TextView) findViewById(R.id.register);
-        register.setOnClickListener(this);
+        setSupportActionBar(binding.appBar.toolbar);
 
-        forget = (TextView) findViewById(R.id.forgetPassword);
-        forget.setOnClickListener(this);
-
-        login = (Button) findViewById(R.id.login);
-        login.setOnClickListener(this);
-
-        userEmail = (EditText) findViewById(R.id.email);
-        userPassword = (EditText) findViewById(R.id.password);
-
-        progressBar = (ProgressBar) findViewById(R.id.mainProgressBar);
-
-        mAuth = FirebaseAuth.getInstance();
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.register:
-                startActivity(new Intent(this, RegisterUser.class));
-                break;
-                
-            case R.id.login:
-                userLogin();
-                break;
-
-            case R.id.forgetPassword:
-                startActivity(new Intent(this, ForgetPassword.class));
-                break;
-        }
-    }
-
-    private void userLogin() {
-        String email = userEmail.getText().toString().trim();
-        String password = userPassword.getText().toString().trim();
-
-        if(email.isEmpty()){
-            userEmail.setError("Email is required!");
-            userEmail.requestFocus();
-            return;
-        }
-
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            userEmail.setError("Please enter a valid email address!");
-            userEmail.requestFocus();
-            return;
-        }
-
-        if(password.isEmpty()){
-            userPassword.setError("Password is required!");
-            userPassword.requestFocus();
-            return;
-        }
-
-        if(password.length()<6){
-            userPassword.setError("Password enter at least 6 character for password!");
-            userPassword.requestFocus();
-            return;
-        }
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    //delete last two lines and uncomment to use email verification
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    startActivity(new Intent(MainActivity.this, HomePage.class));
-                    progressBar.setVisibility(View.GONE);
-                    /*
-                    if(user.isEmailVerified()){
-                        startActivity(new Intent(MainActivity.this, HomePage.class));
-                        progressBar.setVisibility(View.GONE);
-                    }
-                    else{
-                        user.sendEmailVerification();
-                        Toast.makeText(MainActivity.this, "Check your Email to verify!",
-                                Toast.LENGTH_LONG).show();
-                        progressBar.setVisibility(View.GONE);
-                    }
-
-                     */
-                }
-                else{
-                    Toast.makeText(MainActivity.this, "Failed to login! Please check!",
-                            Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-        });
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home_fragment,
+                R.id.nav_map_fragment,
+                R.id.nav_report_fragment,
+                R.id.nav_profile_fragment)
+//to display the Navigation button as a drawer symbol,not being shown as an Up button
+                .setOpenableLayout(binding.drawerLayout)
+                .build();
+        FragmentManager fragmentManager= getSupportFragmentManager();
+        NavHostFragment navHostFragment = (NavHostFragment)
+                fragmentManager.findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+        //Sets up a NavigationView for use with a NavController.
+        NavigationUI.setupWithNavController(binding.navView, navController);
+        //Sets up a Toolbar for use with a NavController.
+        NavigationUI.setupWithNavController(binding.appBar.toolbar,navController,
+                mAppBarConfiguration);
     }
 }

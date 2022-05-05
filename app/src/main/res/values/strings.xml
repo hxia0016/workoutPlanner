@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">workOutPlanner</string>
+    <string name="mapbox_access_token"> pk.eyJ1IjoiaGFuemhhb3hpYW8iLCJhIjoiY2wxZng3ZGhhMDBwejNrcXZzajV4cDU0ZyJ9.KOKg09cvDPSe0cdoGzb3ow</string>
 </resources>
