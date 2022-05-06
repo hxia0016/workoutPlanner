@@ -22,6 +22,7 @@ public class ReportFragment extends Fragment {
         addBinding = ReportFragmentBinding.inflate(inflater, container, false);
         View view = addBinding.getRoot();
         return view;
+//       this is test comment
     }
     @Override
     public void onDestroyView() {
