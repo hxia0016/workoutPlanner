@@ -57,8 +57,9 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            //once banner clicked, return to login screen
             case R.id.banner:
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, LoginUser.class));
                 break;
             case R.id.Register:
                 registerUser();
@@ -73,48 +74,56 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         String regEmail = email.getText().toString().trim();
         String regFPassword = password.getText().toString().trim();
 
+        //verification
         if(regFName.isEmpty()){
             fName.setError("First name required!");
             fName.requestFocus();
             return;
         }
 
+        //verification
         if(regLName.isEmpty()){
             lName.setError("Last name required!");
             lName.requestFocus();
             return;
         }
 
+        //verification
         if(regAge.isEmpty()){
             age.setError("Age name required!");
             age.requestFocus();
             return;
         }
 
+        //verification
         if(regEmail.isEmpty()){
             email.setError("Email name required!");
             email.requestFocus();
             return;
         }
 
+        //verification
         if(!Patterns.EMAIL_ADDRESS.matcher(regEmail).matches()){
             email.setError("Please provide a valid email!");
             email.requestFocus();
             return;
         }
 
+        //verification
         if(regFPassword.isEmpty()){
             password.setError("Password name required!");
             password.requestFocus();
             return;
         }
 
+        //verification
         if(regFPassword.length()<6){
             password.setError("Password should have at least 6 characters!");
             password.requestFocus();
             return;
         }
 
+        //create user
         progressBar.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(regEmail,regFPassword)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -132,6 +141,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                                     if(task.isSuccessful()){
                                         Toast.makeText(RegisterUser.this,"Successfully registered!",
                                                 Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(RegisterUser.this, LoginUser.class));
                                         progressBar.setVisibility(View.GONE);
 
                                     }
