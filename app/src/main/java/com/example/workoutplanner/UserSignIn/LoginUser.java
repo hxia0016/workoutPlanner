@@ -2,6 +2,10 @@ package com.example.workoutplanner.UserSignIn;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +19,9 @@ import android.widget.Toast;
 
 import com.example.workoutplanner.MainActivity;
 import com.example.workoutplanner.R;
+import com.example.workoutplanner.data.User;
+import com.example.workoutplanner.data.viewModel.SharedViewModel;
+import com.example.workoutplanner.fragments.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -108,6 +115,10 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     startActivity(new Intent(LoginUser.this, MainActivity.class));
                     progressBar.setVisibility(View.GONE);
+
+                    //Pass the User to the rest fragments
+
+
                     /*
                     if(user.isEmailVerified()){
                         startActivity(new Intent(LoginUser.this, HomePage.class));
