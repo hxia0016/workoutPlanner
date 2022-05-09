@@ -16,7 +16,10 @@ import com.example.workoutplanner.data.viewModel.PlanViewModel;
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
 import com.example.workoutplanner.model.Exercies;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -35,6 +38,16 @@ public class HomeFragment extends Fragment {
         View view = binding.getRoot();
 
 
+        //set the user name
+
+        //set the date
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH)+1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        binding.time.setText("Today is: "+day+"/"+month);
+
+
+        //The recycle view
         exercises = new ArrayList<Exercies>();
         exercises = Exercies.createContactsList();
         adapter = new RecyclerViewAdapter(exercises);

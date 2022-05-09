@@ -116,6 +116,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                 if (task.isSuccessful()){
                     //delete last two lines and uncomment to use email verification
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
                     startActivity(new Intent(LoginUser.this, MainActivity.class));
                     progressBar.setVisibility(View.GONE);
 
