@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.workoutplanner.MainActivity;
 import com.example.workoutplanner.R;
+import com.example.workoutplanner.fragments.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -116,27 +117,11 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                 if (task.isSuccessful()){
                     //delete last two lines and uncomment to use email verification
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                    startActivity(new Intent(LoginUser.this, MainActivity.class));
+                    updateUI(user);
                     progressBar.setVisibility(View.GONE);
 
                     //Pass the User to the rest fragments
 
-
-                    /*
-                    //email verification for first time user
-                    if(user.isEmailVerified()){
-                        startActivity(new Intent(LoginUser.this, HomePage.class));
-                        progressBar.setVisibility(View.GONE);
-                    }
-                    else{
-                        user.sendEmailVerification();
-                        Toast.makeText(LoginUser.this, "Check your Email to verify!",
-                                Toast.LENGTH_LONG).show();
-                        progressBar.setVisibility(View.GONE);
-                    }
-
-                     */
                 }
                 else{
                     Toast.makeText(LoginUser.this, "Failed to login! Please check!",
@@ -146,4 +131,19 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             }
         });
     }
+
+   /* @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        updateUI(currentUser);
+    }*/
+
+    public void updateUI(FirebaseUser currentUser){
+        Intent newIntent = new Intent(this, MainActivity.class);
+        newIntent.putExtra("email",currentUser.getEmail());
+        startActivity(newIntent);
+    }
+
 }
