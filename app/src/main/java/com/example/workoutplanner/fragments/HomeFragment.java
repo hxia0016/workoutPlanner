@@ -5,17 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.workoutplanner.R;
 import com.example.workoutplanner.adapter.RecyclerViewAdapter;
-import com.example.workoutplanner.data.viewModel.SharedViewModel;
+import com.example.workoutplanner.data.viewModel.PlanViewModel;
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
 import com.example.workoutplanner.model.Exercies;
 
@@ -23,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private SharedViewModel model;
+    private PlanViewModel model;
     private HomeFragmentBinding binding;
     public HomeFragment(){}
 
