@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+
 import com.example.workoutplanner.R;
-import com.example.workoutplanner.data.viewModel.SharedViewModel;
+import com.example.workoutplanner.databinding.HomeFragmentBinding;
 import com.example.workoutplanner.databinding.ReportFragmentBinding;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -30,7 +31,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ReportFragment extends Fragment {
-    private SharedViewModel model;
     private ReportFragmentBinding binding;
     public ReportFragment(){}
     private PieChart pieChart;

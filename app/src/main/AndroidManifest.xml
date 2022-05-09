@@ -15,17 +15,20 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.WorkOutPlanner.NoActionBar"
-            android:exported="true"/>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing|stateHidden"/> //do not effected by the keyboard
         <activity
             android:name=".UserSignIn.ForgetPassword"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustNothing|stateHidden"/>
         <activity
             android:name=".UserSignIn.RegisterUser"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustNothing|stateHidden"/>
             <activity
                 android:name=".UserSignIn.LoginUser"
-                android:exported="true" >
+                android:exported="true"
+                android:windowSoftInputMode="adjustNothing|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -34,13 +34,15 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_user);
-
+        // set click listener for register button
         register = (TextView) findViewById(R.id.register);
         register.setOnClickListener(this);
 
+        // set click listener for forget password button
         forget = (TextView) findViewById(R.id.forgetPassword);
         forget.setOnClickListener(this);
 
+        // set click listener for login button
         login = (Button) findViewById(R.id.login);
         login.setOnClickListener(this);
 
@@ -57,6 +59,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.register:
+                //once clicked, go to register screen
                 startActivity(new Intent(this, RegisterUser.class));
                 break;
 
@@ -65,33 +68,39 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                 break;
 
             case R.id.forgetPassword:
+                // Once clicked, go to forget password screen
                 startActivity(new Intent(this, ForgetPassword.class));
                 break;
         }
     }
 
     private void userLogin() {
+        //get input information
         String email = userEmail.getText().toString().trim();
         String password = userPassword.getText().toString().trim();
 
+        //verification
         if(email.isEmpty()){
             userEmail.setError("Email is required!");
             userEmail.requestFocus();
             return;
         }
 
+        //verification
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             userEmail.setError("Please enter a valid email address!");
             userEmail.requestFocus();
             return;
         }
 
+        //verification
         if(password.isEmpty()){
             userPassword.setError("Password is required!");
             userPassword.requestFocus();
             return;
         }
 
+        //firebase require at least 6 character
         if(password.length()<6){
             userPassword.setError("Password enter at least 6 character for password!");
             userPassword.requestFocus();
@@ -100,15 +109,22 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
         progressBar.setVisibility(View.VISIBLE);
 
+        //authorize email and password
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()){
                     //delete last two lines and uncomment to use email verification
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
                     startActivity(new Intent(LoginUser.this, MainActivity.class));
                     progressBar.setVisibility(View.GONE);
+
+                    //Pass the User to the rest fragments
+
+
                     /*
+                    //email verification for first time user
                     if(user.isEmailVerified()){
                         startActivity(new Intent(LoginUser.this, HomePage.class));
                         progressBar.setVisibility(View.GONE);

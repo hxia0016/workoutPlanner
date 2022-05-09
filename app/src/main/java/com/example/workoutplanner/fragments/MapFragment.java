@@ -7,12 +7,11 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.workoutplanner.data.viewModel.SharedViewModel;
-import com.example.workoutplanner.databinding.HomeFragmentBinding;
+import com.example.workoutplanner.data.viewModel.PlanViewModel;
 import com.example.workoutplanner.databinding.MapFragmentBinding;
 
 public class MapFragment extends Fragment {
-    private SharedViewModel model;
+    private PlanViewModel model;
     private MapFragmentBinding addBinding;
     public MapFragment(){}
     @Override
