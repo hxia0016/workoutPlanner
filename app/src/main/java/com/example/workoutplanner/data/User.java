@@ -3,6 +3,7 @@ package com.example.workoutplanner.data;
 public class User {
 
     public String fName, lName, age, email;
+//    public int uid;
 
     public User(){
 
@@ -13,6 +14,7 @@ public class User {
         this.lName = lName;
         this.age = age;
         this.email = email;
+//        this.uid = uid;
     }
 
     public String getfName() {
@@ -46,5 +48,8 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+//    public int getUid(){return uid};
+//    public void setUid(int uid){this.uid = uid};
 }
 

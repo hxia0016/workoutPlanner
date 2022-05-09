@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/FIT_Learning/5046/new/workoutPlanner/workoutPlanner/app/src/main/res/layout/Report.xml" value="0.1661600810536981" />
+        <entry key="..\:/FIT_Learning/5046/new/workoutPlanner/workoutPlanner/app/src/main/res/layout/activity_forget_password.xml" value="0.1661600810536981" />
+        <entry key="..\:/FIT_Learning/5046/new/workoutPlanner/workoutPlanner/app/src/main/res/layout/profile_fragment.xml" value="0.1661600810536981" />
+        <entry key="..\:/FIT_Learning/5046/new/workoutPlanner/workoutPlanner/app/src/main/res/layout/report_fragment.xml" value="0.335" />
         <entry key="app/src/main/res/drawable/side_nav_bar.xml" value="0.1645" />
         <entry key="app/src/main/res/layout/activity_forget_password.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_home_page.xml" value="0.19610507246376813" />
