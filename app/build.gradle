@@ -54,4 +54,7 @@ dependencies {
     implementation ('com.mapbox.maps:android:10.4.0'){
         exclude group: 'group_name', module: 'module_name'
     }
+
+    //weather
+    implementation 'com.android.volley:volley:1.2.1'
 }

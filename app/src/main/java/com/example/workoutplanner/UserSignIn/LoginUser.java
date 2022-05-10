@@ -144,6 +144,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         Intent newIntent = new Intent(this, MainActivity.class);
         newIntent.putExtra("email",currentUser.getEmail());
         startActivity(newIntent);
+
     }
 
 }
