@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterUser extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
@@ -34,12 +35,15 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     private TextView registerUser, banner;
     private ProgressBar progressBar;
     private String regGenderSelect;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
 
         mAuth = FirebaseAuth.getInstance();
+
 
         banner = (TextView) findViewById(R.id.banner);
         banner.setOnClickListener(this);
