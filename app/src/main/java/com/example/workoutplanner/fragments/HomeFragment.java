@@ -51,8 +51,6 @@ public class HomeFragment extends Fragment {
     private RecyclerViewAdapter adapter;
 
     //weather
-    private double lat = -37.840935;
-    private double lon = 144.946457;
     private final String url = "https://api.openweathermap.org/data/2.5/weather";
     private final String appid ="9d89733781265480638a045b2dcc4acc";
     DecimalFormat df = new DecimalFormat("#.##");
@@ -68,7 +66,9 @@ public class HomeFragment extends Fragment {
 
         SharedPreferences sp= this.getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         binding.userName.setText(sp.getString("fName","Not found"));
-
+        String[] geocode = sp.getString("geocode",null).split(",");
+        Double lat = Double.parseDouble(geocode[0]);
+        Double lng = Double.parseDouble(geocode[1]);;
 
 
         //set the date
@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
 
 
         //set the weather
-        getWeatherDetails(view);
+        getWeatherDetails(view, lat, lng);
 
 
         //The recycle view
@@ -119,16 +119,14 @@ public class HomeFragment extends Fragment {
 
 
     //get the weather
-    public void getWeatherDetails(View view){
+    public void getWeatherDetails(View view, Double lat, Double lng){
         String tempUrl = "";
-        Double reaLat = -37.840935;
-        Double reaLon = 144.946457;
 
 
-        if (reaLat == null || reaLon == null){
+        if (lat == null || lng == null){
             binding.userName.setText("Can not capture the location");
         }else {
-            tempUrl = url+"?lat="+reaLat+"&lon="+reaLon+"&appid="+appid;
+            tempUrl = url+"?lat="+lat+"&lon="+lng+"&appid="+appid;
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, tempUrl, new Response.Listener<String>() {
                 @Override

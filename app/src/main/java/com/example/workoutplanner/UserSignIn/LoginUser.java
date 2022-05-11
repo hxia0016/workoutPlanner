@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.example.workoutplanner.MainActivity;
 import com.example.workoutplanner.R;
 import com.example.workoutplanner.fragments.HomeFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -28,6 +31,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.IOException;
+import java.util.List;
 
 public class LoginUser extends AppCompatActivity implements View.OnClickListener{
 
@@ -172,6 +178,11 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                         editor.putString("gender", ds.child("gender").getValue(String.class));
                         editor.putString("zipcode", ds.child("zipcode").getValue(String.class));
                         editor.putString("fName", ds.child("fName").getValue(String.class));
+
+                        String address = ds.child("address").getValue(String.class)+ds.child("zipcode").getValue(String.class);
+                        LatLng lagLng = getLocationFromAddress(LoginUser.this, address);
+                        String geocode = lagLng.toString();
+                        editor.putString("geocode", geocode.replace("lat/lng: (", "").replace(")",""));
                         editor.commit();
                     }
                 }
@@ -185,6 +196,30 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
         startActivity(newIntent);
 
+    }
+
+    public LatLng getLocationFromAddress(Context context,String strAddress) {
+
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
     }
 
 }

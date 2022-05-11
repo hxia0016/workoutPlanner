@@ -3,6 +3,7 @@ package com.example.workoutplanner.fragments;
 import static android.provider.MediaStore.Images.Media.getBitmap;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -46,9 +47,15 @@ public class MapFragment extends Fragment {
         addBinding = MapFragmentBinding.inflate(inflater, container, false);
         View view = addBinding.getRoot();
 
+        SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        String fName=sp.getString("fName",null);
+        String[] geocode = sp.getString("geocode",null).split(",");
+        Double lat = Double.parseDouble(geocode[0]);
+        Double lng = Double.parseDouble(geocode[1]);
+
         CameraOptions cameraPosition = new CameraOptions.Builder()
                 .zoom(13.0)
-                .center(point)
+                .center(Point.fromLngLat(lng,lat))
                 .build();
         addBinding.mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS);
         addBinding.mapView.getMapboxMap().setCamera(cameraPosition);
@@ -62,7 +69,7 @@ public class MapFragment extends Fragment {
         Drawable drawable = AppCompatResources.getDrawable(getContext(), R.drawable.red_marker);
         Bitmap myMark = ((BitmapDrawable) drawable).getBitmap();
         PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
-                .withPoint(com.mapbox.geojson.Point.fromLngLat(145.045837, -37.876823))
+                .withPoint(com.mapbox.geojson.Point.fromLngLat(lng, lat))
                 .withIconImage(myMark);
         pointAnnotationManager.create(pointAnnotationOptions);
 
