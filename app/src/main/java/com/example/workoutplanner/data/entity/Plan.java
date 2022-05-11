@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 @Entity
 public class Plan {
     @PrimaryKey(autoGenerate = true)
@@ -13,16 +15,21 @@ public class Plan {
     @NonNull
     public String activity;
     @ColumnInfo(name = "Duration")
+//    @NonNull
+//    public String date;
+//    @ColumnInfo(name = "Date")
     @NonNull
     public int duration;
     @ColumnInfo(name = "Complete")
     @NonNull
     public boolean complete;
 
+
     public Plan(@NonNull String activity, @NonNull int duration, @NonNull boolean complete) {
         this.activity = activity;
         this.duration = duration;
         this.complete = complete;
+//        this.date = date;
     }
 
     @NonNull
@@ -51,4 +58,6 @@ public class Plan {
     public void setComplete(@NonNull boolean complete) {
         this.complete = complete;
     }
+
+//    public void setDate(@NonNull String date){this.date = date;}
 }

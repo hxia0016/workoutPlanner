@@ -1,14 +1,21 @@
 package com.example.workoutplanner.fragments;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 
+import com.example.workoutplanner.MainActivity;
 import com.example.workoutplanner.R;
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
 import com.example.workoutplanner.databinding.ReportFragmentBinding;
@@ -28,13 +35,18 @@ import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class ReportFragment extends Fragment {
     private ReportFragmentBinding binding;
     public ReportFragment(){}
     private PieChart pieChart;
     View report;
+    private DatePickerDialog.OnDateSetListener piedateListener;
+    private DatePickerDialog.OnDateSetListener bardateListener1;
+    private DatePickerDialog.OnDateSetListener bardateListener2;
 
 
     @Override
@@ -44,6 +56,66 @@ public class ReportFragment extends Fragment {
         binding = ReportFragmentBinding.inflate(inflater, container, false);
         report =inflater.inflate(R.layout.report_fragment, container, false);
         View view = binding.getRoot();
+
+        binding.pieDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog,piedateListener,year,month,day);
+                datePickerDialog.show();
+            }
+        });
+
+        piedateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month +1;
+                String date = day+"/"+month+"/"+year;
+                binding.pieDate.setText(date);
+            }
+        };
+
+        binding.barDate1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog,bardateListener1,year,month,day);
+                datePickerDialog.show();
+            }
+        });
+        bardateListener1 = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month +1;
+                String date = day+"/"+month+"/"+year;
+                binding.barDate1.setText(date);
+            }
+        };
+        binding.barDate2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_Dialog,bardateListener2,year,month,day);
+                datePickerDialog.show();
+            }
+        });
+        bardateListener2 = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month +1;
+                String date = day+"/"+month+"/"+year;
+                binding.barDate2.setText(date);
+            }
+        };
         binding.drawpie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,9 +141,9 @@ public class ReportFragment extends Fragment {
     }
     public void loadpiedata(){
         ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(1,"Calories consumed"));
-        entries.add(new PieEntry(2,"Calories burned"));
-        entries.add(new PieEntry(3,"Remain Calories"));
+        entries.add(new PieEntry(1,"Completed"));
+        entries.add(new PieEntry(2,"Incompleted"));
+
 
         PieDataSet Pdataset = new PieDataSet(entries,null);
         Pdataset.setDrawIcons(false);
@@ -113,4 +185,6 @@ public class ReportFragment extends Fragment {
 
         binding.barchart.invalidate();
     }
+
+
 }
