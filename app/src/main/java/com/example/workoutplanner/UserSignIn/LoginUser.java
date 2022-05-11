@@ -3,7 +3,9 @@ package com.example.workoutplanner.UserSignIn;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -21,6 +23,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginUser extends AppCompatActivity implements View.OnClickListener{
 
@@ -30,6 +37,9 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
+    private FirebaseDatabase database;
+    private DatabaseReference userRef;
+    private static final String USER = "Users";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +63,10 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         progressBar = (ProgressBar) findViewById(R.id.mainProgressBar);
 
         mAuth = FirebaseAuth.getInstance();
+
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference(USER);
+
     }
 
 
@@ -142,7 +156,33 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
     public void updateUI(FirebaseUser currentUser){
         Intent newIntent = new Intent(this, MainActivity.class);
-        newIntent.putExtra("email",currentUser.getEmail());
+        String userEmail = currentUser.getEmail();
+        SharedPreferences sp= LoginUser.this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    if(ds.child("email").getValue().equals(userEmail)){
+                        editor.putString("email", ds.child("lName").getValue(String.class));
+                        System.out.println(ds.child("lName").getValue(String.class)+ds.child("fName").getValue(String.class)+ds.child("age").getValue(String.class)+ds.child("address").getValue(String.class));
+                        editor.putString("lName", ds.child("lName").getValue(String.class));
+                        editor.putString("address", ds.child("address").getValue(String.class));
+                        editor.putString("age", ds.child("age").getValue(String.class));
+                        editor.putString("gender", ds.child("gender").getValue(String.class));
+                        editor.putString("zipcode", ds.child("zipcode").getValue(String.class));
+                        editor.putString("fName", ds.child("fName").getValue(String.class));
+                        editor.commit();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         startActivity(newIntent);
 
     }

@@ -1,7 +1,9 @@
 package com.example.workoutplanner.fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,8 @@ import com.example.workoutplanner.adapter.RecyclerViewAdapter;
 import com.example.workoutplanner.data.viewModel.PlanViewModel;
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
 import com.example.workoutplanner.model.Exercies;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,10 +63,13 @@ public class HomeFragment extends Fragment {
         View view = binding.getRoot();
 
 
+
+        SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        String fName=sp.getString("fName",null);
+
+
         //set the user name
-        Intent intent = new Intent();
-        String userName = intent.getStringExtra("email");
-        binding.userName.setText(userName);
+        binding.userName.setText(fName);
 
         //set the date
         Calendar calendar = Calendar.getInstance();
@@ -98,8 +105,10 @@ public class HomeFragment extends Fragment {
         });
 
 
+
         return view;
     }
+
 
     private void saveData(String exercise, int duration) {
         Exercies ex = new Exercies(exercise, duration);

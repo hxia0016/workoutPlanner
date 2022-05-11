@@ -53,6 +53,10 @@ public class MapFragment extends Fragment {
         addBinding.mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS);
         addBinding.mapView.getMapboxMap().setCamera(cameraPosition);
 
+        /*
+        Reference:https://github.com/mapbox/mapbox-maps-android/issues/916
+         */
+
         AnnotationPlugin annotationAPI = AnnotationPluginImplKt.getAnnotations(addBinding.mapView);
         PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationAPI,addBinding.mapView);
         Drawable drawable = AppCompatResources.getDrawable(getContext(), R.drawable.red_marker);
