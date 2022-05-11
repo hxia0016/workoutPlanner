@@ -22,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.workoutplanner.UserSignIn.LoginUser;
 import com.example.workoutplanner.adapter.RecyclerViewAdapter;
 import com.example.workoutplanner.data.viewModel.PlanViewModel;
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
@@ -56,20 +57,19 @@ public class HomeFragment extends Fragment {
     private final String appid ="9d89733781265480638a045b2dcc4acc";
     DecimalFormat df = new DecimalFormat("#.##");
 
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the View for this fragment
         binding = HomeFragmentBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        SharedPreferences sp= this.getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        binding.userName.setText(sp.getString("fName","Not found"));
 
 
-        SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String fName=sp.getString("fName",null);
-
-
-        //set the user name
-        binding.userName.setText(fName);
 
         //set the date
         Calendar calendar = Calendar.getInstance();
@@ -92,17 +92,18 @@ public class HomeFragment extends Fragment {
         binding.recyclerView.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getActivity());
         binding.recyclerView.setLayoutManager(layoutManager);
-        binding.addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String exercise = binding.eName.getText().toString().trim();
-                String sduration= binding.eDuration.getText().toString().trim();
-                if (!exercise.isEmpty() || !sduration.isEmpty()) {
-                    int duration=new Integer(sduration).intValue();
-                    saveData(exercise, duration);
-                }
-            }
-        });
+
+//        binding.addButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String exercise = binding.eName.getText().toString().trim();
+//                String sduration= binding.eDuration.getText().toString().trim();
+//                if (!exercise.isEmpty() || !sduration.isEmpty()) {
+//                    int duration=new Integer(sduration).intValue();
+//                    saveData(exercise, duration);
+//                }
+//            }
+//        });
 
 
 
@@ -141,7 +142,7 @@ public class HomeFragment extends Fragment {
                         JSONObject jsonObjectMain = jsonResponse.getJSONObject("main");
                         double temp = jsonObjectMain.getDouble("temp") - 273.15;
                         System.out.println(temp);
-                        binding.temp.setText(df.format(temp));
+                        binding.temp.setText("Today temperature: "+df.format(temp)+"°C");
                         //Log.d("response",df.format(temp));
 
                     }catch (JSONException e){
