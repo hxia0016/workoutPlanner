@@ -153,7 +153,6 @@ public class ReportFragment extends Fragment {
         ArrayList<Integer> piecolor = new ArrayList<>();
         piecolor.add(Color.rgb(255,0,0));
         piecolor.add(Color.rgb(0,111,0));
-        piecolor.add(Color.rgb(0,0,255));
 
         Pdataset.setColors(piecolor);
         PieData Pdata = new PieData(Pdataset);
