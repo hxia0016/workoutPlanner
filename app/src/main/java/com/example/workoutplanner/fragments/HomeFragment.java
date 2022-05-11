@@ -22,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.workoutplanner.UserSignIn.LoginUser;
 import com.example.workoutplanner.adapter.RecyclerViewAdapter;
 import com.example.workoutplanner.data.viewModel.PlanViewModel;
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
@@ -50,11 +51,12 @@ public class HomeFragment extends Fragment {
     private RecyclerViewAdapter adapter;
 
     //weather
-    private double lat = -37.840935;
-    private double lon = 144.946457;
     private final String url = "https://api.openweathermap.org/data/2.5/weather";
     private final String appid ="9d89733781265480638a045b2dcc4acc";
     DecimalFormat df = new DecimalFormat("#.##");
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,14 +64,12 @@ public class HomeFragment extends Fragment {
         binding = HomeFragmentBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        SharedPreferences sp= this.getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        binding.userName.setText(sp.getString("fName","Not found"));
+        String[] geocode = sp.getString("geocode",null).split(",");
+        Double lat = Double.parseDouble(geocode[0]);
+        Double lng = Double.parseDouble(geocode[1]);;
 
-
-        SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String fName=sp.getString("fName",null);
-
-
-        //set the user name
-        binding.userName.setText(fName);
 
         //set the date
         Calendar calendar = Calendar.getInstance();
@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
 
 
         //set the weather
-        getWeatherDetails(view);
+        getWeatherDetails(view, lat, lng);
 
 
         //The recycle view
@@ -92,17 +92,18 @@ public class HomeFragment extends Fragment {
         binding.recyclerView.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getActivity());
         binding.recyclerView.setLayoutManager(layoutManager);
-        binding.addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String exercise = binding.eName.getText().toString().trim();
-                String sduration= binding.eDuration.getText().toString().trim();
-                if (!exercise.isEmpty() || !sduration.isEmpty()) {
-                    int duration=new Integer(sduration).intValue();
-                    saveData(exercise, duration);
-                }
-            }
-        });
+
+//        binding.addButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String exercise = binding.eName.getText().toString().trim();
+//                String sduration= binding.eDuration.getText().toString().trim();
+//                if (!exercise.isEmpty() || !sduration.isEmpty()) {
+//                    int duration=new Integer(sduration).intValue();
+//                    saveData(exercise, duration);
+//                }
+//            }
+//        });
 
 
 
@@ -118,16 +119,14 @@ public class HomeFragment extends Fragment {
 
 
     //get the weather
-    public void getWeatherDetails(View view){
+    public void getWeatherDetails(View view, Double lat, Double lng){
         String tempUrl = "";
-        Double reaLat = -37.840935;
-        Double reaLon = 144.946457;
 
 
-        if (reaLat == null || reaLon == null){
+        if (lat == null || lng == null){
             binding.userName.setText("Can not capture the location");
         }else {
-            tempUrl = url+"?lat="+reaLat+"&lon="+reaLon+"&appid="+appid;
+            tempUrl = url+"?lat="+lat+"&lon="+lng+"&appid="+appid;
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, tempUrl, new Response.Listener<String>() {
                 @Override
@@ -141,7 +140,7 @@ public class HomeFragment extends Fragment {
                         JSONObject jsonObjectMain = jsonResponse.getJSONObject("main");
                         double temp = jsonObjectMain.getDouble("temp") - 273.15;
                         System.out.println(temp);
-                        binding.temp.setText(df.format(temp));
+                        binding.temp.setText("Today temperature: "+df.format(temp)+"°C");
                         //Log.d("response",df.format(temp));
 
                     }catch (JSONException e){
