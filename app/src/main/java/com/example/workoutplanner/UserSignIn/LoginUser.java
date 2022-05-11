@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.example.workoutplanner.MainActivity;
 import com.example.workoutplanner.R;
-import com.example.workoutplanner.fragments.HomeFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,6 +45,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
     private FirebaseDatabase database;
     private DatabaseReference userRef;
     private static final String USER = "Users";
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +137,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                 if (task.isSuccessful()){
                     //delete last two lines and uncomment to use email verification
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    token = user.getUid();
                     updateUI(user);
                     progressBar.setVisibility(View.GONE);
 
@@ -170,8 +171,8 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds: snapshot.getChildren()){
                     if(ds.child("email").getValue().equals(userEmail)){
-                        editor.putString("email", ds.child("lName").getValue(String.class));
-                        System.out.println(ds.child("lName").getValue(String.class)+ds.child("fName").getValue(String.class)+ds.child("age").getValue(String.class)+ds.child("address").getValue(String.class));
+                        editor.putString("uid", token);
+                        editor.putString("email", ds.child("email").getValue(String.class));
                         editor.putString("lName", ds.child("lName").getValue(String.class));
                         editor.putString("address", ds.child("address").getValue(String.class));
                         editor.putString("age", ds.child("age").getValue(String.class));

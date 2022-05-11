@@ -82,8 +82,8 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     }
 
     private void registerUser() {
-        String regFName = fName.getText().toString().trim();
-        String regLName = lName.getText().toString().trim();
+        String regFName = fName.getText().toString().trim().toLowerCase();
+        String regLName = lName.getText().toString().trim().toLowerCase();
         String regAge = age.getText().toString().trim();
         String regEmail = email.getText().toString().trim();
         String regPassword = password.getText().toString().trim();
@@ -141,6 +141,20 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         }
 
         //verification
+        if(regPassword.matches("[0-9]+")){
+            password.setError("Please Provide a strong password!(Include numbers and letters)");
+            password.requestFocus();
+            return;
+        }
+
+        //verification
+        if(regPassword.matches("[a-zA-Z]+")){
+            password.setError("Please Provide a strong password!(Include numbers and letters)");
+            password.requestFocus();
+            return;
+        }
+
+        //verification
         if(regAddress.isEmpty()){
             address.setError("Address required!");
             address.requestFocus();
@@ -154,6 +168,12 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
+        //verification
+        if(regZipcode.length() != 4){
+            zipcode.setError("Please provide a valid zipcode!");
+            zipcode.requestFocus();
+            return;
+        }
 
         //create user
         progressBar.setVisibility(View.VISIBLE);
