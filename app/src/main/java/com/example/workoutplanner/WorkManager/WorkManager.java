@@ -46,7 +46,7 @@ public class WorkManager extends Worker{
         Plan Plan = convertData(getInputData());
 
         if (Plan == null) {
-            Log.i("ERROR", "WorkManager: Can not get(parse) plan data.");
+            Log.i("ERROR", "WorkManager: There is no plan data today.");
             return Result.failure();
         } else {
             updateDataToFirebase(Plan);
@@ -68,7 +68,7 @@ public class WorkManager extends Worker{
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.i("DataupdateWorker", "Firebase data modified at " + updatetime.format(new Date()));
+                Log.i("DataupdateWorker", "Firebase data updated at " + updatetime.format(new Date()));
             }
 
             @Override
