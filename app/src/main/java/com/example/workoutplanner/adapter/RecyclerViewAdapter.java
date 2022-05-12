@@ -22,6 +22,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
         this.exercies = exercies;
     }
 
+    public RecyclerViewAdapter() {
+
+    }
+
     //creates a new viewholder that is constructed with a new View, inflated from a layout
     @Override
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
@@ -33,8 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
 
     // this method binds the view holder created with data that will be displayed
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder viewHolder, int
-            position) {
+    public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder viewHolder, int position) {
         final Exercise ex = exercies.get(position);
         viewHolder.binding.tvRvunit.setText(ex.getExercise_name());
         viewHolder.binding.tvRvmark.setText(Integer.toString(ex.getDuration()));
@@ -51,10 +54,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
     public int getItemCount() {
         return exercies.size();
     }
+
     public void addUnits(List<Exercise> results) {
         exercies = results;
         notifyDataSetChanged();
     }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private RvLayoutBinding binding;
         public ViewHolder(RvLayoutBinding binding){

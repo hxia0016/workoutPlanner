@@ -16,7 +16,6 @@ public interface ExerciseDAO {
     @Query("SELECT * FROM `exercise`")
     LiveData<List<Exercise>> getAll();
 
-
     @Query("SELECT * FROM `exercise` WHERE user_email == :email")
     Exercise findByUser(String email);
 

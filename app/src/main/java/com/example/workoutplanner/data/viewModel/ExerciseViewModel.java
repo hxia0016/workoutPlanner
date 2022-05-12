@@ -29,7 +29,7 @@ public class ExerciseViewModel extends AndroidViewModel {
         return eRepository.findByUserEmail(userEmail);
     }
 
-    public LiveData<List<Exercise>> getAllCustomers() {
+    public LiveData<List<Exercise>> getAllExercises() {
         return allExercises;
     }
 

@@ -31,8 +31,7 @@ public class Exercise {
     public String addTime;
 
 
-    public Exercise(int uid, @NonNull String user_email, @NonNull String exercise_name, int duration, @NonNull String addTime) {
-        this.uid = uid;
+    public Exercise(@NonNull String user_email, @NonNull String exercise_name, int duration, @NonNull String addTime) {
         this.user_email = user_email;
         this.exercise_name = exercise_name;
         this.duration = duration;
@@ -40,19 +39,10 @@ public class Exercise {
         this.addTime = addTime;
     }
     @Ignore
-    public Exercise(String user_email, @NonNull String exercise_name, int duration, boolean states, @NonNull String addTime) {
-        this.user_email = user_email;
+    public Exercise(@NonNull String exercise_name, int duration) {
         this.exercise_name = exercise_name;
         this.duration = duration;
-        this.states = states;
-        this.addTime = addTime;
-    }
-    @Ignore
-    public Exercise(@NonNull String exercise_name, int duration, boolean states) {
-        this.user_email = user_email;
-        this.exercise_name = exercise_name;
-        this.duration = duration;
-        this.states = states;
+        this.states = false;
     }
 
 
@@ -93,10 +83,23 @@ public class Exercise {
 
 
     public static List<Exercise> createContactsList() {
+
         List<Exercise> exercises = new ArrayList<Exercise>();
-        exercises.add(new Exercise("Running",30,false));
-        exercises.add(new Exercise("Walk",30,false));
+        exercises.add(new Exercise("Running",30));
+        exercises.add(new Exercise("Walk",30));
         return exercises;
+    }
+
+    @Override
+    public String toString() {
+        return "Exercise{" +
+                "uid=" + uid +
+                ", user_email='" + user_email + '\'' +
+                ", exercise_name='" + exercise_name + '\'' +
+                ", duration=" + duration +
+                ", states=" + states +
+                ", addTime='" + addTime + '\'' +
+                '}';
     }
 }
 
