@@ -1,7 +1,13 @@
 <resources>
     <string name="app_name">workOutPlanner</string>
     <string name="mapbox_access_token"> pk.eyJ1IjoiaGFuemhhb3hpYW8iLCJhIjoiY2wxZng3ZGhhMDBwejNrcXZzajV4cDU0ZyJ9.KOKg09cvDPSe0cdoGzb3ow</string>
-    
+
+    <string name="facebook_app_id">7326925817379487</string>
+    <string name="fb_login_protocol_scheme">fb7326925817379487</string>
+    <string name="facebook_client_token">b709f744fb51b34b2835ec8e98783501</string>
+
+
+
     <string-array name="gender_spinner">
         <item>M</item>
         <item>F</item>

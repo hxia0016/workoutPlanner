@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,6 +21,16 @@ import android.widget.Toast;
 
 import com.example.workoutplanner.MainActivity;
 import com.example.workoutplanner.R;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,7 +43,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class LoginUser extends AppCompatActivity implements View.OnClickListener{
@@ -41,16 +56,24 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
     private EditText userEmail, userPassword;
     private Button login;
 
+    private Button fblogin;
+
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private FirebaseDatabase database;
     private DatabaseReference userRef;
     private static final String USER = "Users";
     private String token;
+    private static final String EMAIL = "email";
+
+
+    private CallbackManager callbackManager;
+    private LoginManager loginManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_login_user);
         // set click listener for register button
@@ -65,6 +88,8 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         login = (Button) findViewById(R.id.login);
         login.setOnClickListener(this);
 
+
+
         userEmail = (EditText) findViewById(R.id.email);
         userPassword = (EditText) findViewById(R.id.password);
 
@@ -75,7 +100,58 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference(USER);
 
+        // set click listener for fb login button
+        fblogin = (Button) findViewById(R.id.fblogin_button);
+        fblogin.setOnClickListener(this);
+
+
+        callbackManager = CallbackManager.Factory.create();
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                        Toast.makeText(LoginUser.this, "Login Canceled",
+                                Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                        Toast.makeText(LoginUser.this, "Failed to login! Please check!",
+                                Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+
+
+        //facebookLogin();
+        /*fblogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                loginManager.logInWithReadPermissions(
+                        MainActivity.this,
+                        Arrays.asList(
+                                "email",
+                                "public_profile",
+                                "user_birthday"));
+            }
+        });
+*/
+
+
     }
+
+
 
 
     @Override
@@ -224,5 +300,114 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
         return p1;
     }
+
+    public void facebookLogin()
+    {
+
+        loginManager
+                = LoginManager.getInstance();
+        callbackManager
+                = CallbackManager.Factory.create();
+
+        loginManager
+                .registerCallback(
+                        callbackManager,
+                        new FacebookCallback<LoginResult>() {
+
+                            @Override
+                            public void onSuccess(LoginResult loginResult)
+                            {
+                                GraphRequest request = GraphRequest.newMeRequest(
+
+                                        loginResult.getAccessToken(),
+
+                                        new GraphRequest.GraphJSONObjectCallback() {
+
+                                            @Override
+                                            public void onCompleted(JSONObject object,
+                                                                    GraphResponse response)
+                                            {
+
+                                                if (object != null) {
+                                                    try {
+                                                        String name = object.getString("name");
+                                                        String email = object.getString("email");
+                                                        String fbUserID = object.getString("id");
+
+                                                        disconnectFromFacebook();
+
+                                                        // do action after Facebook login success
+                                                        // or call your API
+                                                    }
+                                                    catch (JSONException | NullPointerException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }
+                                        });
+
+                                Bundle parameters = new Bundle();
+                                parameters.putString(
+                                        "fields",
+                                        "id, name, email, gender, birthday");
+                                request.setParameters(parameters);
+                                request.executeAsync();
+                            }
+
+                            @Override
+                            public void onCancel()
+                            {
+                                Log.v("LoginScreen", "---onCancel");
+                            }
+
+                            @Override
+                            public void onError(FacebookException error)
+                            {
+                                // here write code when get error
+                                Log.v("LoginScreen", "----onError: "
+                                        + error.getMessage());
+                            }
+                        });
+    }
+
+    public void disconnectFromFacebook()
+    {
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me/permissions/",
+                null,
+                HttpMethod.DELETE,
+                new GraphRequest
+                        .Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse graphResponse)
+                    {
+                        LoginManager.getInstance().logOut();
+                    }
+                })
+                .executeAsync();
+    }
+    @Override
+    protected void onActivityResult(int requestCode,
+                                    int resultCode,
+                                    Intent data)
+    {
+
+        // add this line
+        callbackManager.onActivityResult(
+                requestCode,
+                resultCode,
+                data);
+
+        super.onActivityResult(requestCode,
+                resultCode,
+                data);
+    }
+
+
 
 }
