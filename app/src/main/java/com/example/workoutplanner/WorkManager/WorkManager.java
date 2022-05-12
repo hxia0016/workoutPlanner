@@ -1,3 +1,4 @@
+/*
 package com.example.workoutplanner.WorkManager;
 
 import android.content.Context;
@@ -74,9 +75,10 @@ public class WorkManager extends Worker{
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.i("DataUploadWorker", "Firebase operation cancelled. Error: " + error);
-            }
+        }
         });
         dailyRecord.child(“record”).setValue(record);
 
     }
 }
+*/
