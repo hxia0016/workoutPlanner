@@ -16,7 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.workoutplanner.data.viewModel.PlanViewModel;
+
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
 
 import org.json.JSONArray;
@@ -27,7 +27,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
-    private PlanViewModel model;
+
     private HomeFragmentBinding addBinding;
     public HomeFragment(){}
 

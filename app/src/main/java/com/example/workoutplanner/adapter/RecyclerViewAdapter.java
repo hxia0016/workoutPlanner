@@ -8,16 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.workoutplanner.data.entity.Exercise;
 import com.example.workoutplanner.databinding.RvLayoutBinding;
-import com.example.workoutplanner.model.Exercies;
+
 
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter
         <RecyclerViewAdapter.ViewHolder> {
-    private static List<Exercies> exercies;
+    private static List<Exercise> exercies;
 
-    public RecyclerViewAdapter(List<Exercies> exercies) {
+    public RecyclerViewAdapter(List<Exercise> exercies) {
         this.exercies = exercies;
     }
 
@@ -34,9 +35,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder viewHolder, int
             position) {
-        final Exercies ex = exercies.get(position);
-        viewHolder.binding.tvRvunit.setText(ex.geteName());
-        viewHolder.binding.tvRvmark.setText(Integer.toString(ex.geteDuration()));
+        final Exercise ex = exercies.get(position);
+        viewHolder.binding.tvRvunit.setText(ex.getExercise_name());
+        viewHolder.binding.tvRvmark.setText(Integer.toString(ex.getDuration()));
         viewHolder.binding.ivItemDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,7 +51,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
     public int getItemCount() {
         return exercies.size();
     }
-    public void addUnits(List<Exercies> results) {
+    public void addUnits(List<Exercise> results) {
         exercies = results;
         notifyDataSetChanged();
     }

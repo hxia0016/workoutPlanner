@@ -27,9 +27,11 @@ import com.android.volley.toolbox.Volley;
 import com.example.workoutplanner.R;
 import com.example.workoutplanner.UserSignIn.LoginUser;
 import com.example.workoutplanner.adapter.RecyclerViewAdapter;
+import com.example.workoutplanner.data.entity.Exercise;
+import com.example.workoutplanner.data.entity.Plan;
 import com.example.workoutplanner.data.viewModel.PlanViewModel;
 import com.example.workoutplanner.databinding.PlanFragmentBinding;
-import com.example.workoutplanner.model.Exercies;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -50,7 +52,7 @@ public class PlanFragment extends Fragment {
     public PlanFragment(){}
 
     private RecyclerView.LayoutManager layoutManager;
-    private List<Exercies> exercises;
+    private List<Exercise> exercises;
     private RecyclerViewAdapter adapter;
 
     //weather
@@ -92,8 +94,8 @@ public class PlanFragment extends Fragment {
 
 
         //The recycle view
-        exercises = new ArrayList<Exercies>();
-        exercises = Exercies.createContactsList();
+        exercises = new ArrayList<Exercise>();
+        exercises = Exercise.createContactsList();
         adapter = new RecyclerViewAdapter(exercises);
         binding.recyclerView.addItemDecoration(new
                 DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
@@ -119,7 +121,7 @@ public class PlanFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 String[] exerciseOptions = getResources().getStringArray(R.array.exercisespinnerclass);
                 eName = exerciseOptions[pos];
-                Toast.makeText(getActivity(),eName+"", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(),eName+"", Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -132,14 +134,14 @@ public class PlanFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 String[] durationOptions = getResources().getStringArray(R.array.durationspinnerclass);
                 eDuration = durationOptions[pos];
-                Toast.makeText(getActivity(),eDuration+"", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(),eDuration+"", Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
-        Toast.makeText(getActivity(),eDuration+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(),eDuration+"", Toast.LENGTH_SHORT).show();
 
 
 
@@ -149,7 +151,7 @@ public class PlanFragment extends Fragment {
 
 
     private void saveData(String exercise, int duration) {
-        Exercies ex = new Exercies(exercise, duration);
+        Exercise ex = new Exercise(exercise, duration,false);
         exercises.add(ex);
         adapter.addUnits(exercises);
     }
