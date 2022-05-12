@@ -13,7 +13,7 @@ import java.util.List;
 
 @Dao
 public interface PlanDAO {
-    @Query("SELECT * FROM `plan` ORDER BY Activity ASC")
+    @Query("SELECT * FROM `plan`")
     LiveData<List<Plan>> getAll();
 
     @Query("SELECT * FROM `plan` WHERE uid = :planId LIMIT 1")
