@@ -3,6 +3,7 @@ package com.example.workoutplanner.data.entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
@@ -28,9 +29,17 @@ public class Exercise {
     @ColumnInfo(name = "addTime")
     @NonNull
     public String addTime;
-    @ColumnInfo(name = "completeTime")
-    public String completeTime;
 
+
+    public Exercise(int uid, @NonNull String user_email, @NonNull String exercise_name, int duration, @NonNull String addTime) {
+        this.uid = uid;
+        this.user_email = user_email;
+        this.exercise_name = exercise_name;
+        this.duration = duration;
+        this.states = false;
+        this.addTime = addTime;
+    }
+    @Ignore
     public Exercise(String user_email, @NonNull String exercise_name, int duration, boolean states, @NonNull String addTime) {
         this.user_email = user_email;
         this.exercise_name = exercise_name;
@@ -38,7 +47,7 @@ public class Exercise {
         this.states = states;
         this.addTime = addTime;
     }
-
+    @Ignore
     public Exercise(@NonNull String exercise_name, int duration, boolean states) {
         this.user_email = user_email;
         this.exercise_name = exercise_name;
@@ -63,9 +72,7 @@ public class Exercise {
     public void setAddTime(@NonNull String addTime) {
         this.addTime = addTime;
     }
-    public void setCompleteTime(String completeTime) {
-        this.completeTime = completeTime;
-    }
+
     public String getUser_email() {
         return user_email;
     }
@@ -83,9 +90,7 @@ public class Exercise {
     public String getAddTime() {
         return addTime;
     }
-    public String getCompleteTime() {
-        return completeTime;
-    }
+
 
     public static List<Exercise> createContactsList() {
         List<Exercise> exercises = new ArrayList<Exercise>();

@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.workoutplanner.MainActivity;
 import com.example.workoutplanner.R;
-import com.example.workoutplanner.data.viewModel.PlanViewModel;
+
 import com.example.workoutplanner.databinding.MapFragmentBinding;
 import com.mapbox.geojson.Point;
 import com.mapbox.maps.CameraOptions;
@@ -34,7 +34,7 @@ import com.mapbox.maps.plugin.delegates.MapPluginProviderDelegate;
 
 
 public class MapFragment extends Fragment {
-    private PlanViewModel model;
+
     private MapFragmentBinding addBinding;
     private MapboxMap map;
 
