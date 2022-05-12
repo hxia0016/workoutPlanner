@@ -118,7 +118,7 @@ public class PlanFragment extends Fragment {
                     //insert data
                     //get the now date
                     long currentTime = System.currentTimeMillis();
-                    String timeNow = new SimpleDateFormat("yyyy-MM-dd").format(currentTime);
+                    String timeNow = new SimpleDateFormat("dd/M/yyyy").format(currentTime);
                     Exercise newEx = new Exercise(userEmail,eName,duration,timeNow);
                     exerciseViewModel.insert(newEx);
 

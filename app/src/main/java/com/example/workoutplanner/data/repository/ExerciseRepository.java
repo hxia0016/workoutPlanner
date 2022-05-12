@@ -56,7 +56,6 @@ public class ExerciseRepository {
 //        });
 //    }
 
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public CompletableFuture<Exercise> findByUserEmail(final String userEmail) {
         return CompletableFuture.supplyAsync(new Supplier<Exercise>() {

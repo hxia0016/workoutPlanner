@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +16,17 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 
 import com.example.workoutplanner.MainActivity;
 import com.example.workoutplanner.R;
+import com.example.workoutplanner.data.entity.Exercise;
+import com.example.workoutplanner.data.viewModel.ExerciseViewModel;
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
 import com.example.workoutplanner.databinding.ReportFragmentBinding;
 import com.github.mikephil.charting.charts.PieChart;
@@ -41,6 +48,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class ReportFragment extends Fragment {
     private ReportFragmentBinding binding;
@@ -50,7 +58,9 @@ public class ReportFragment extends Fragment {
     private DatePickerDialog.OnDateSetListener piedateListener;
     private DatePickerDialog.OnDateSetListener bardateListener1;
     private DatePickerDialog.OnDateSetListener bardateListener2;
-
+    private ExerciseViewModel exerciseViewModel;
+    private String userEmail;
+    private String Piedate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +69,32 @@ public class ReportFragment extends Fragment {
         binding = ReportFragmentBinding.inflate(inflater, container, false);
         report =inflater.inflate(R.layout.report_fragment, container, false);
         View view = binding.getRoot();
+        SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        userEmail=sp.getString("email",null);
+
+        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
+
+        List<Exercise> all = new ArrayList<>();
+        List<Exercise> Run = new ArrayList<>();
+
+
+        exerciseViewModel.getAllExercises().observe(getActivity(), new Observer<List<Exercise>>() {
+            @Override
+            public void onChanged(List<Exercise> exercises) {
+                String run = "Run";
+
+                for (Exercise temp : exercises) {
+                    all.add(temp);
+                }
+                for (Exercise temp : exercises) {
+                    if (run.equals(temp.getExercise_name() ) ){
+                        Run.add(temp);
+                    }
+                }
+                System.out.println("All data: " +all);
+                System.out.println("Running: " +Run);
+            }
+        });
 
         binding.pieDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +116,11 @@ public class ReportFragment extends Fragment {
                 month = month +1;
                 String date = day+"/"+month+"/"+year;
                 binding.pieDate.setText(date);
+                Piedate = binding.pieDate.getText().toString();
+
             }
+
+
         };
 
         binding.barDate1.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +168,8 @@ public class ReportFragment extends Fragment {
         binding.drawpie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadpiedata();
+
+                loadpiedata(all,Piedate);
             }
         });
 
@@ -148,10 +189,34 @@ public class ReportFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-    public void loadpiedata(){
+    public void loadpiedata(List<Exercise>alldata,String date){
+        float completed = 0;
+        float imcompleted = 0;
+
+        for (Exercise temp : alldata) {
+            System.out.println(temp.getAddTime());
+        }
+        List<Exercise> oneday = new ArrayList<>();
+        for (Exercise temp : alldata) {
+            if (Piedate.equals(temp.getAddTime()) ){
+                oneday.add(temp);
+            }
+        }
+        System.out.println("one day: " +oneday);
+        System.out.println("Pie date: " +Piedate);
+        for (Exercise temp : oneday) {
+            if (temp.isStates() == true){
+                completed +=1.0;
+            }
+            else{
+                imcompleted +=1.0;
+            }
+        }
+        System.out.println("completed: " +completed);
+        System.out.println("imcompleted: " +imcompleted);
         ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(1,"Completed"));
-        entries.add(new PieEntry(2,"Incompleted"));
+        entries.add(new PieEntry(completed,"Completed"));
+        entries.add(new PieEntry(imcompleted,"Incompleted"));
 
 
         PieDataSet Pdataset = new PieDataSet(entries,null);
