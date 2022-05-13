@@ -14,6 +14,7 @@ import com.example.workoutplanner.data.entity.Exercise;
 import com.example.workoutplanner.data.repository.ExerciseRepository;
 import com.example.workoutplanner.data.viewModel.ExerciseViewModel;
 import com.example.workoutplanner.databinding.RvLayoutBinding;
+import com.example.workoutplanner.fragments.PlanFragment;
 
 
 import java.util.ArrayList;
@@ -54,9 +55,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
         viewHolder.binding.ivItemDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exercies.remove(ex);
-                System.out.println("REMOVE "+Arrays.toString(exercies.toArray()));
+                PlanFragment.exerciseViewModel.completeExercise(true, ex.user_email, ex.uid+"");
+                ex.setStates(true);
+//                exercies.remove(ex);
+                System.out.println(Arrays.toString(exercies.toArray()));
                 notifyDataSetChanged();
+
             }
         });
     }

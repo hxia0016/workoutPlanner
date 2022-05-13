@@ -43,7 +43,7 @@ public class PlanFragment extends Fragment {
     private String eName;
     private String eDuration;
     private List<Exercise> exercises;
-    private ExerciseViewModel exerciseViewModel;
+    public static ExerciseViewModel exerciseViewModel;
     private String userEmail;
 
     @Override
@@ -57,7 +57,7 @@ public class PlanFragment extends Fragment {
 
 
         //delete all livedata
-        exerciseViewModel.deleteAllExercise();
+//        exerciseViewModel.deleteAllExercise();
 
         //get the user name
         SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
@@ -71,12 +71,11 @@ public class PlanFragment extends Fragment {
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
 
-        exerciseViewModel.getAllExercises().observe(getActivity(), new Observer<List<Exercise>>() {
+        exerciseViewModel.getAllUnComplete().observe(getActivity(), new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
                 adapter.setExercise(exercises);
                 adapter.notifyDataSetChanged();
-                System.out.println(adapter.getItemCount()+"!!!!!!!!!!!!!!!!!!");
             }
         });
 

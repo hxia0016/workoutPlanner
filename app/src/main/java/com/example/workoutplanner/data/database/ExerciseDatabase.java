@@ -14,7 +14,7 @@ import com.example.workoutplanner.data.entity.Plan;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Exercise.class}, version = 6, exportSchema = false)
+@Database(entities = {Exercise.class}, version = 7, exportSchema = false)
 public abstract class ExerciseDatabase extends RoomDatabase {
     public abstract ExerciseDAO exerciseDAO();
     private static ExerciseDatabase INSTANCE;

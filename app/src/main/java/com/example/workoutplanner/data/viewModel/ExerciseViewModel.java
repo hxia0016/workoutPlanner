@@ -52,4 +52,8 @@ public class ExerciseViewModel extends AndroidViewModel {
     public void getAllByUser(String userEmail){
         eRepository.getAllByUser(userEmail);
     }
+
+    public LiveData<List<Exercise>> getAllUnComplete(){
+        return eRepository.getAllUnComplete();
+    }
 }

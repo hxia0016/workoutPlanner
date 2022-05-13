@@ -16,6 +16,10 @@ public interface ExerciseDAO {
     @Query("SELECT * FROM `exercise`")
     LiveData<List<Exercise>> getAll();
 
+    @Query("SELECT * FROM `exercise` WHERE states == 0")
+    LiveData<List<Exercise>> getAllUnComplete();
+
+
     @Query("SELECT * FROM `exercise` WHERE states == :flag AND user_email == :email")
     LiveData<List<Exercise>> getAllByStates(boolean flag,String email);
 

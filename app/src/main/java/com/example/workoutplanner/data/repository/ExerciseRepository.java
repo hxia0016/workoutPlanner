@@ -74,6 +74,11 @@ public class ExerciseRepository {
         });
     }
 
+    public LiveData<List<Exercise>>  getAllUnComplete(){
+        return exerciseDAO.getAllUnComplete();
+    }
+
+
 //    public void updateExercise(final Exercise customer){
 //        CustomerDatabase.databaseWriteExecutor.execute(new Runnable() {
 //            @Override
