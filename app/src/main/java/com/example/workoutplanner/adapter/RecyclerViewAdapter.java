@@ -1,5 +1,6 @@
 package com.example.workoutplanner.adapter;
 
+import android.app.Application;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.workoutplanner.data.entity.Exercise;
+import com.example.workoutplanner.data.repository.ExerciseRepository;
 import com.example.workoutplanner.data.viewModel.ExerciseViewModel;
 import com.example.workoutplanner.databinding.RvLayoutBinding;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter
@@ -52,7 +55,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
             @Override
             public void onClick(View v) {
                 exercies.remove(ex);
-                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+                System.out.println("REMOVE "+Arrays.toString(exercies.toArray()));
+                notifyDataSetChanged();
             }
         });
     }
@@ -74,6 +78,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
             super(binding.getRoot());
             this.binding = binding;
         }
+    }
+
+    public List<Exercise> getExercies() {
+        return exercies;
     }
 }
 

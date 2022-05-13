@@ -37,8 +37,8 @@ public class ExerciseViewModel extends AndroidViewModel {
         eRepository.insert(ex);
     }
 
-    public void completeExercise(boolean state,String userEmail){
-        eRepository.completeExercise(state,userEmail);
+    public void completeExercise(boolean state,String userEmail,String uid){
+        eRepository.completeExercise(state,userEmail,uid);
     }
 
     public void deleteAllExercise(){

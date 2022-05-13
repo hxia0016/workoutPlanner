@@ -37,7 +37,7 @@ public interface ExerciseDAO {
     @Query("DELETE FROM `exercise`")
     void deleteAll();
 
-    @Query("UPDATE `exercise` SET states = :state WHERE user_email == :email")
-    void completePlan(boolean state,String email);
+    @Query("UPDATE `exercise` SET states = :state WHERE user_email == :email AND uid=:id")
+    void completePlan(boolean state,String email,String id);
 
 }

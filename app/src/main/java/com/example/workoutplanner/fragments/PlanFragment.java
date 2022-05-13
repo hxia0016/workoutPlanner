@@ -57,7 +57,7 @@ public class PlanFragment extends Fragment {
 
 
         //delete all livedata
-//        exerciseViewModel.deleteAllExercise();
+        exerciseViewModel.deleteAllExercise();
 
         //get the user name
         SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
@@ -74,12 +74,11 @@ public class PlanFragment extends Fragment {
         exerciseViewModel.getAllExercises().observe(getActivity(), new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
-                    adapter.setExercise(exercises);
-                    adapter.notifyDataSetChanged();
+                adapter.setExercise(exercises);
+                adapter.notifyDataSetChanged();
+                System.out.println(adapter.getItemCount()+"!!!!!!!!!!!!!!!!!!");
             }
         });
-
-
 
         //Add the new exercise
         binding.addButton.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +95,8 @@ public class PlanFragment extends Fragment {
 
                     exerciseViewModel.insert(newEx);
                     adapter.notifyDataSetChanged();
+
+                    System.out.println("PlanScreen:"+Arrays.toString(adapter.getExercies().toArray()));
                 }
             }
         });

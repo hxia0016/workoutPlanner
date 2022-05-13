@@ -38,11 +38,11 @@ public class ExerciseRepository {
         });
     }
 
-    public void completeExercise(final boolean state,String userName){
+    public void completeExercise(final boolean state,String userName,String uid){
         ExerciseDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                exerciseDAO.completePlan(state,userName);
+                exerciseDAO.completePlan(state,userName,uid);
             }
         });
     }
