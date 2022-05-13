@@ -1,6 +1,7 @@
 package com.example.workoutplanner.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -30,24 +32,33 @@ import com.example.workoutplanner.data.viewModel.ExerciseViewModel;
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
 import com.example.workoutplanner.databinding.ReportFragmentBinding;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ReportFragment extends Fragment {
@@ -61,6 +72,8 @@ public class ReportFragment extends Fragment {
     private ExerciseViewModel exerciseViewModel;
     private String userEmail;
     private String Piedate;
+    private String Bardate1;
+    private String Bardate2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,7 +89,6 @@ public class ReportFragment extends Fragment {
 
         List<Exercise> all = new ArrayList<>();
         List<Exercise> Run = new ArrayList<>();
-
 
         exerciseViewModel.getAllExercises().observe(getActivity(), new Observer<List<Exercise>>() {
             @Override
@@ -142,6 +154,7 @@ public class ReportFragment extends Fragment {
                 month = month +1;
                 String date = day+"/"+month+"/"+year;
                 binding.barDate1.setText(date);
+                Bardate1 = binding.barDate1.getText().toString();
             }
         };
         binding.barDate2.setOnClickListener(new View.OnClickListener() {
@@ -163,6 +176,7 @@ public class ReportFragment extends Fragment {
                 month = month +1;
                 String date = day+"/"+month+"/"+year;
                 binding.barDate2.setText(date);
+                Bardate2 = binding.barDate2.getText().toString();
             }
         };
         binding.drawpie.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +190,12 @@ public class ReportFragment extends Fragment {
         binding.drawbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadbardata();
+                if(Bardate2.compareTo(Bardate1)>0) {
+                    loadbardata(all, Bardate1, Bardate2);
+                }
+                else{
+                    return;
+                }
             }
         });
 
@@ -237,30 +256,80 @@ public class ReportFragment extends Fragment {
         binding.piechart.setData(Pdata);
         binding.piechart.invalidate();
     }
-    public void loadbardata(){
-        ArrayList<BarEntry> consumedCal = new ArrayList<>();
-        ArrayList<BarEntry> burnedCal = new ArrayList<>();
-        consumedCal.add(new BarEntry(0,1));
-        consumedCal.add(new BarEntry(1,6));
-        consumedCal.add(new BarEntry(3,13));
+    public void loadbardata(List<Exercise>alldata,String startdate,String enddate){
+        int completed = 0;
+        int imcompleted = 0;
+        ArrayList<BarEntry> complete = new ArrayList<>();
+        ArrayList<BarEntry> incomplete = new ArrayList<>();
+        List<String> datelist = new ArrayList<>();
+        List<Exercise> daterange = new ArrayList<>();
+        for (Exercise temp : alldata) {
+            if (temp.getAddTime().compareTo(startdate)>=0 && temp.getAddTime().compareTo(enddate)<=0){
+                daterange.add(temp);
+            }
 
-        burnedCal.add(new BarEntry(0,3));
-        burnedCal.add(new BarEntry(1,8));
-        burnedCal.add(new BarEntry(3,18));
+        }
+        System.out.println("date range: " +daterange);
 
-        BarDataSet bar1 = new BarDataSet(consumedCal,"Calories Consumed");
+        for(Exercise temp:daterange){
+            datelist.add(temp.getAddTime());
+
+        }
+        datelist = removeDuplicate(datelist);
+        System.out.println("datelist : "+datelist);
+        List<Integer> completelist = new ArrayList<>();
+        List<Integer> incompletelist = new ArrayList<>();
+        for(int i = 0; i <datelist.size();i++){
+            for(Exercise temp:daterange){
+                if(datelist.get(i).equals(temp.getAddTime())){
+                    if (temp.isStates() == true){
+                        completed +=1.0;
+                    }
+                    else{
+                        imcompleted +=1.0;
+                    }
+                }
+            }
+            completelist.add(completed);
+            incompletelist.add(imcompleted);
+        }
+        for(int i = 0; i <datelist.size();i++){
+            complete.add(new BarEntry(i,completelist.get(i)));
+            incomplete.add(new BarEntry(i,incompletelist.get(i)));
+        }
+
+
+        BarDataSet bar1 = new BarDataSet(incomplete,"Incompleted");
         bar1.setColor(Color.RED);
-        BarDataSet bar2 = new BarDataSet(burnedCal,"Calories burned");
+        BarDataSet bar2 = new BarDataSet(complete,"Completed");
         bar2.setColor(Color.BLUE);
 
         BarData data = new BarData(bar1,bar2);
         binding.barchart.setData(data);
+        data.setBarWidth(0.3f);
+        List<String> xAxisValues = new ArrayList<>();
+        for(int i = 0; i < datelist.size(); i++){
+
+            xAxisValues.add(datelist.get(i));
+            System.out.println("get i :"+datelist.get(i));
+            System.out.println("xAxisValues: "+xAxisValues);
+        }
+        binding.barchart.getXAxis().setValueFormatter(new
+                com.github.mikephil.charting.formatter.IndexAxisValueFormatter(xAxisValues));
 
         binding.barchart.invalidate();
     }
+// Reference:https://blog.csdn.net/qq_21376985/article/details/50971512
 
 
 
-
+    //remove duplicate date
+    //reference:https://blog.csdn.net/jike11231/article/details/120991792
+    public List removeDuplicate(List list) {
+        HashSet h = new HashSet(list);
+        list.clear();
+        list.addAll(h);
+        return list;
+    }
 
 }

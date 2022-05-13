@@ -12,18 +12,19 @@
         android:id="@+id/piechart"
         android:layout_width="0dp"
         android:layout_height="250dp"
-        app:layout_constraintBottom_toTopOf="@+id/barname"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/piename"
-        app:layout_constraintVertical_bias="0.381" />
+        app:layout_constraintVertical_bias="0.108" />
 
     <TextView
         android:id="@+id/barname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="460dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="400dp"
         android:text="Bar chart"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,7 +42,7 @@
         android:id="@+id/barchart"
         android:layout_width="0dp"
         android:layout_height="230dp"
-        android:layout_marginTop="492dp"
+        android:layout_marginTop="456dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +52,7 @@
         android:id="@+id/piename"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
+        android:layout_marginTop="56dp"
         android:text="Pie chart"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -68,11 +69,12 @@
         app:layout_constraintStart_toEndOf="@+id/barDate2"
         app:layout_constraintTop_toBottomOf="@+id/piechart" />
 
+
     <Button
         android:id="@+id/drawpie"
         android:layout_width="78dp"
         android:layout_height="36dp"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="56dp"
         android:layout_marginEnd="71dp"
         android:text="Draw"
         app:layout_constraintEnd_toEndOf="parent"
@@ -80,13 +82,12 @@
         app:layout_constraintStart_toEndOf="@+id/pieDate"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <EditText
         android:id="@+id/pieDate"
         android:layout_width="115dp"
         android:layout_height="53dp"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="112dp"
+        android:layout_marginTop="48dp"
         android:ems="10"
         android:inputType="date"
         app:layout_constraintStart_toEndOf="@+id/piename"
@@ -96,19 +97,19 @@
         android:id="@+id/barDate1"
         android:layout_width="100dp"
         android:layout_height="55dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="date"
-        app:layout_constraintStart_toEndOf="@+id/barname"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/piechart" />
 
     <EditText
         android:id="@+id/barDate2"
         android:layout_width="100dp"
         android:layout_height="55dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="date"
         app:layout_constraintStart_toEndOf="@+id/barDate1"
