@@ -6,66 +6,41 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.workoutplanner.R;
-import com.example.workoutplanner.UserSignIn.LoginUser;
 import com.example.workoutplanner.adapter.RecyclerViewAdapter;
 import com.example.workoutplanner.data.entity.Exercise;
-import com.example.workoutplanner.data.entity.Plan;
 import com.example.workoutplanner.data.viewModel.ExerciseViewModel;
-import com.example.workoutplanner.data.viewModel.PlanViewModel;
 import com.example.workoutplanner.databinding.PlanFragmentBinding;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.sql.Date;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 public class PlanFragment extends Fragment {
-    private PlanViewModel model;
     private PlanFragmentBinding binding;
     public PlanFragment(){}
 
     private RecyclerView.LayoutManager layoutManager;
-    private List<Exercise> exercises;
+
     private RecyclerViewAdapter adapter;
 
 
     private String eName;
     private String eDuration;
-
+    private List<Exercise> exercises;
     private ExerciseViewModel exerciseViewModel;
     private String userEmail;
 
@@ -75,36 +50,27 @@ public class PlanFragment extends Fragment {
         binding = PlanFragmentBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        //get the user name
-        SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        userEmail=sp.getString("email",null);
+        binding.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
         //we make sure that AndroidViewModelFactory creates the view model so it can
         //accept the Application as the parameter
         exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
 
-        List<Exercise> all = new ArrayList<>();
-        exerciseViewModel.getAllExercises().observe(getActivity(), new Observer<List<Exercise>>() {
-            @Override
-            public void onChanged(List<Exercise> exercises) {
-                for (Exercise temp : exercises) {
-                    System.out.println(temp);
-                }
+        exercises = new ArrayList<Exercise>();
+        exercises = allExercisesContent();
 
-            }
-        });
-
+        //get the user name
+        SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        userEmail=sp.getString("email",null);
 
 
         //The recycle view
-        exercises = new ArrayList<Exercise>();
 
-        adapter = new RecyclerViewAdapter(all);
-        binding.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        binding.recyclerView.setAdapter(adapter);
+        adapter = new RecyclerViewAdapter(exercises);
+
         layoutManager = new LinearLayoutManager(getActivity());
         binding.recyclerView.setLayoutManager(layoutManager);
-
+        binding.recyclerView.setAdapter(adapter);
 
 
         //Add the new exercise
@@ -113,10 +79,10 @@ public class PlanFragment extends Fragment {
             public void onClick(View v) {
                 if (!eName.isEmpty() || !eDuration.isEmpty()) {
                     int duration=new Integer(eDuration.split(" ")[0]).intValue();
-//                    saveData(eName, duration);
+                    saveData(eName, duration);
 
                     //insert data
-                    //get the now date
+                    //get the current date
                     long currentTime = System.currentTimeMillis();
                     String timeNow = new SimpleDateFormat("dd/M/yyyy").format(currentTime);
                     Exercise newEx = new Exercise(userEmail,eName,duration,timeNow);
@@ -174,7 +140,7 @@ public class PlanFragment extends Fragment {
     private void saveData(String exercise, int duration) {
         Exercise ex = new Exercise(exercise, duration);
         exercises.add(ex);
-        adapter.addUnits(exercises);
+        adapter.addUnits(ex);
     }
 
 
@@ -182,6 +148,7 @@ public class PlanFragment extends Fragment {
 
     public List<Exercise> allExercisesContent(){
         List<Exercise> all = new ArrayList<Exercise>();
+        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
         exerciseViewModel.getAllExercises().observe(getActivity(), new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {

@@ -12,11 +12,12 @@ import com.example.workoutplanner.data.entity.Exercise;
 import com.example.workoutplanner.databinding.RvLayoutBinding;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter
         <RecyclerViewAdapter.ViewHolder> {
-    private static List<Exercise> exercies;
+    List<Exercise> exercies = new ArrayList<>();
 
     public RecyclerViewAdapter(List<Exercise> exercies) {
         this.exercies = exercies;
@@ -55,8 +56,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
         return exercies.size();
     }
 
-    public void addUnits(List<Exercise> results) {
-        exercies = results;
+    public void addUnits(Exercise result) {
+        Exercise ex = result;
         notifyDataSetChanged();
     }
 
