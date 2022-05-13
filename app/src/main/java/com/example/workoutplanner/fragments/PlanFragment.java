@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -49,15 +51,13 @@ public class PlanFragment extends Fragment {
         // Inflate the View for this fragment
         binding = PlanFragmentBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-
-        binding.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-
         //we make sure that AndroidViewModelFactory creates the view model so it can
         //accept the Application as the parameter
         exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
 
-        exercises = new ArrayList<Exercise>();
-        exercises = allExercisesContent();
+
+        //delete all livedata
+//        exerciseViewModel.deleteAllExercise();
 
         //get the user name
         SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
@@ -65,12 +65,20 @@ public class PlanFragment extends Fragment {
 
 
         //The recycle view
-
-        adapter = new RecyclerViewAdapter(exercises);
-
+        adapter = new RecyclerViewAdapter();
+        binding.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         layoutManager = new LinearLayoutManager(getActivity());
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
+
+        exerciseViewModel.getAllExercises().observe(getActivity(), new Observer<List<Exercise>>() {
+            @Override
+            public void onChanged(List<Exercise> exercises) {
+                    adapter.setExercise(exercises);
+                    adapter.notifyDataSetChanged();
+            }
+        });
+
 
 
         //Add the new exercise
@@ -80,27 +88,15 @@ public class PlanFragment extends Fragment {
                 if (!eName.isEmpty() || !eDuration.isEmpty()) {
                     int duration=new Integer(eDuration.split(" ")[0]).intValue();
                     saveData(eName, duration);
-
                     //insert data
                     //get the current date
                     long currentTime = System.currentTimeMillis();
                     String timeNow = new SimpleDateFormat("dd/M/yyyy").format(currentTime);
                     Exercise newEx = new Exercise(userEmail,eName,duration,timeNow);
+
                     exerciseViewModel.insert(newEx);
-
-                    exerciseViewModel.getAllExercises().observe(getActivity(), new Observer<List<Exercise>>() {
-                        @Override
-                        public void onChanged(List<Exercise> exercises) {
-                            for (Exercise temp : exercises) {
-                                System.out.println("++++++++++++++++++++++");
-                                System.out.println(Arrays.toString(exercises.toArray()));
-                            }
-                        }
-                    });
-
-
+                    adapter.notifyDataSetChanged();
                 }
-
             }
         });
 
@@ -117,7 +113,6 @@ public class PlanFragment extends Fragment {
 
             }
         });
-
         //Get the spinner option
         binding.eDuration.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -132,37 +127,18 @@ public class PlanFragment extends Fragment {
         });
 
 
-
         return view;
     }
 
 
     private void saveData(String exercise, int duration) {
         Exercise ex = new Exercise(exercise, duration);
-        exercises.add(ex);
-        adapter.addUnits(ex);
+        adapter.addExercise(ex);
+        adapter.notifyDataSetChanged();
     }
 
 
 
-
-    public List<Exercise> allExercisesContent(){
-        List<Exercise> all = new ArrayList<Exercise>();
-        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
-        exerciseViewModel.getAllExercises().observe(getActivity(), new Observer<List<Exercise>>() {
-            @Override
-            public void onChanged(List<Exercise> exercises) {
-                for (Exercise temp : exercises) {
-                    all.add(temp);
-//                    System.out.println("++++++++++++++++++++++");
-//                    System.out.println(Arrays.toString(exercises.toArray()));
-                }
-
-            }
-        });
-
-        return all;
-    }
 
 
 

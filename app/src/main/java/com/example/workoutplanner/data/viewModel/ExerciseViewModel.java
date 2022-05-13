@@ -40,4 +40,16 @@ public class ExerciseViewModel extends AndroidViewModel {
     public void completeExercise(boolean state,String userEmail){
         eRepository.completeExercise(state,userEmail);
     }
+
+    public void deleteAllExercise(){
+        eRepository.deleteExercise();
+    }
+
+    public void getAllByStates(boolean state,String userEmail){
+        eRepository.getAllByStates( state, userEmail);
+    }
+
+    public void getAllByUser(String userEmail){
+        eRepository.getAllByUser(userEmail);
+    }
 }

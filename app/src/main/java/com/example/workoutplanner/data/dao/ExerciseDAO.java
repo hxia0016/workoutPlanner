@@ -16,6 +16,13 @@ public interface ExerciseDAO {
     @Query("SELECT * FROM `exercise`")
     LiveData<List<Exercise>> getAll();
 
+    @Query("SELECT * FROM `exercise` WHERE states == :flag AND user_email == :email")
+    LiveData<List<Exercise>> getAllByStates(boolean flag,String email);
+
+    @Query("SELECT * FROM `exercise` WHERE user_email == :email")
+    LiveData<List<Exercise>> getAllByUser(String email);
+
+
     @Query("SELECT * FROM `exercise` WHERE user_email == :email")
     Exercise findByUser(String email);
 

@@ -5,10 +5,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.workoutplanner.data.entity.Exercise;
+import com.example.workoutplanner.data.viewModel.ExerciseViewModel;
 import com.example.workoutplanner.databinding.RvLayoutBinding;
 
 
@@ -25,6 +27,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
 
     public RecyclerViewAdapter() {
 
+    }
+
+    public void setExercise(List<Exercise> exercises){
+        this.exercies = exercises;
     }
 
     //creates a new viewholder that is constructed with a new View, inflated from a layout
@@ -46,7 +52,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
             @Override
             public void onClick(View v) {
                 exercies.remove(ex);
-                notifyDataSetChanged();
+                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
             }
         });
     }
@@ -56,10 +62,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
         return exercies.size();
     }
 
-    public void addUnits(Exercise result) {
-        Exercise ex = result;
-        notifyDataSetChanged();
+
+    public void addExercise(Exercise ex){
+        this.exercies.add(ex);
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private RvLayoutBinding binding;

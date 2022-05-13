@@ -47,6 +47,33 @@ public class ExerciseRepository {
         });
     }
 
+    public void deleteExercise(){
+        ExerciseDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                exerciseDAO.deleteAll();
+            }
+        });
+    }
+
+    public void getAllByStates(final boolean state,String userName){
+        ExerciseDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                exerciseDAO.getAllByStates(state,userName);
+            }
+        });
+    }
+
+    public void getAllByUser(String userName){
+        ExerciseDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                exerciseDAO.getAllByUser(userName);
+            }
+        });
+    }
+
 //    public void updateExercise(final Exercise customer){
 //        CustomerDatabase.databaseWriteExecutor.execute(new Runnable() {
 //            @Override
