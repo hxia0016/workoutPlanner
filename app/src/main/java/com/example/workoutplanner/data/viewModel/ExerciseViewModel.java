@@ -60,4 +60,6 @@ public class ExerciseViewModel extends AndroidViewModel {
     public LiveData<List<Exercise>> getAllUnComplete(){
         return eRepository.getAllUnComplete();
     }
+
+
 }

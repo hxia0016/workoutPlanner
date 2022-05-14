@@ -20,13 +20,25 @@ import com.android.volley.toolbox.Volley;
 
 import com.example.workoutplanner.MainActivity;
 import com.example.workoutplanner.api.OpenWeatherAPI;
+
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
+import com.example.workoutplanner.WorkMg;
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
@@ -65,6 +77,36 @@ public class HomeFragment extends Fragment {
         int month = calendar.get(Calendar.MONTH)+1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         addBinding.time.setText("Today is: "+day+"/"+month);
+
+        //set upload button function
+        addBinding.uploadbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //get local data
+                //ExerciseData = ;
+                //String exercisedata = "{test exercisedata}";
+                Log.d("Method be called", "HomeFragment.uploadbutton.setOnClickListener");
+                //get current Time
+                long currentTime = System.currentTimeMillis();
+                String timeNow = new SimpleDateFormat("dd/mm/yyyy HH:mm:ss").format(currentTime);
+                //get exercise database
+                //ExerciseData newEx = new Exercise(timeNow);
+                Log.d("Method be called", "HomeFragment.UploadData");
+
+
+                WorkRequest uploadWorkRequest =
+                        new OneTimeWorkRequest.Builder(WorkMg.class)
+                                .build();
+                WorkManager
+                        .getInstance(getContext())
+                        .enqueue(uploadWorkRequest);
+
+                System.out.println("HomeFragment.UploadData function successful:"+timeNow);
+
+                System.out.println("HomeFragment.Upload button successful:"+timeNow);
+
+            }
+        });
 
 
         //set the weather
