@@ -37,6 +37,14 @@ public class ExerciseRepository {
             }
         });
     }
+    public void update(final Exercise exercise){
+        ExerciseDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                exerciseDAO.updatePlan(exercise);
+            }
+        });
+    }
 
     public void completeExercise(final boolean state,String userName,String uid){
         ExerciseDatabase.databaseWriteExecutor.execute(new Runnable() {
