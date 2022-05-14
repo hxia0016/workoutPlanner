@@ -33,6 +33,8 @@ import java.util.Map;
 
 public class WorkMg extends Worker {
     Exercise exercise;
+    Exercise nullexercise = null;
+
 
     public WorkMg(
             @NonNull Context context,
@@ -41,9 +43,11 @@ public class WorkMg extends Worker {
     }
 
     public Result doWork() {
-        SimpleDateFormat updatetime = new SimpleDateFormat("dd/M/yyyy");
-        SimpleDateFormat testtime = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
+        SimpleDateFormat updatetime = new SimpleDateFormat("ddMyyyy");
+        SimpleDateFormat updatetimeselect = new SimpleDateFormat("dd/M/yyyy");
+        SimpleDateFormat testtime = new SimpleDateFormat("ddMyyyy hh:mm:ss");
         String date = updatetime.format(new Date());
+        String dateselect = updatetimeselect.format(new Date());
         String testdate = testtime.format(new Date());
 
         FirebaseDatabase r_database = FirebaseDatabase.getInstance();
@@ -55,33 +59,70 @@ public class WorkMg extends Worker {
         String token = currentUser.getUid();
         String exerciseid = date+token;
 
+
+
         Log.d("Method be called", "doWork");
         Log.d("doWork", "testdate test " + testdate);
         Log.d("doWork", "token test " + token);
         Log.d("doWork", "Useremail test " + LoginUser.StoreUseremail);
         Log.d("doWork", "exerciseid test " + exerciseid);
 
-        Exercise exercise = ExerciseDatabase.getInstance(getApplicationContext()).exerciseDAO().findByDateandUser(date, LoginUser.StoreUseremail);
+        Exercise exercise = ExerciseDatabase.getInstance(getApplicationContext()).exerciseDAO().findByDateandUser(dateselect, LoginUser.StoreUseremail);
+
+        List<Exercise> exerciselist = ExerciseDatabase.getInstance(getApplicationContext()).exerciseDAO().getAllByDateandUserList(dateselect, LoginUser.StoreUseremail);
+        LiveData<List<Exercise>> exercise_db = ExerciseDatabase.getInstance(getApplicationContext()).exerciseDAO().getAllByDateandUser(dateselect, LoginUser.StoreUseremail);
+        myRef.child(exerciseid).setValue(nullexercise);
+
+        for(Exercise temp: exerciselist){
+            Log.d("doWork", "exerciselist test " + exerciselist);
+            Log.d("doWork", "exercise test " + exercise);
+            //Log.d("doWork", "exercise test " + exerciselist);
+            Log.d("Method be called", "Firebase setValue");
+
+            //DatabaseReference OneusermyRef = r_database.getReference("exerciseDatatestbd22"+exerciseid);
+            //String dataid = OneusermyRef.push().getKey();
+
+            myRef.child(exerciseid).push().setValue(temp)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("start setValue ", "realtime db successfully written!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("start setValue ", "Error writing realtime db", e);
+                        }
+                    });
 
 
+            Log.d("doWork", "finish realtime " + LoginUser.StoreUseremail+testdate);
+
+        }
+
+
+        /*Log.d("doWork", "exerciselist test " + exerciselist);
         Log.d("doWork", "exercise test " + exercise);
+        //Log.d("doWork", "exercise test " + exerciselist);
         Log.d("Method be called", "Firebase setValue");
 
-        myRef.child(exerciseid).setValue(exercise)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("start setValue ", "realtime db successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("start setValue ", "Error writing realtime db", e);
-                    }
-                });
+            myRef.child(exerciseid).setValue(exercise)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("start setValue ", "realtime db successfully written!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("start setValue ", "Error writing realtime db", e);
+                        }
+                    });
 
-        Log.d("doWork", "finish realtime " + LoginUser.StoreUseremail+testdate);
+
+        Log.d("doWork", "finish realtime " + LoginUser.StoreUseremail+testdate);*/
 
 
 
@@ -95,7 +136,7 @@ public class WorkMg extends Worker {
 
 
 
-        Log.d("Method be called", "ExerciseDb collection");
+      /*Log.d("Method be called", "ExerciseDb collection");
         db.collection("ExerciseDb").document(exerciseid).set(exercise)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -111,7 +152,7 @@ public class WorkMg extends Worker {
                 });
 
         //Log.d("started exercise", "Get:  " + exercise);
-        Log.d("doWork", "ExerciseDb collection finished");
+        Log.d("doWork", "ExerciseDb collection finished");*/
 
         //myRef.child("uploadDate").child("exerciseData").push().setValue(exercise_db);
 

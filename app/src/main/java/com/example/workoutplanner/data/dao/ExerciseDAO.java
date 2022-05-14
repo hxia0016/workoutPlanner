@@ -36,6 +36,12 @@ public interface ExerciseDAO {
     @Query("SELECT * FROM `exercise` WHERE addTime == :date AND user_email == :email")
     LiveData<List<Exercise>> getAllByDateandUser(String date,String email);
 
+    /*@Query("SELECT * FROM `exercise` WHERE addTime == :date AND user_email == :email")
+    List<List<Exercise>> getAllByDateandUserList(String date,String email);*/
+
+    @Query("SELECT * FROM `exercise` WHERE addTime == :date AND user_email == :email")
+    List<Exercise> getAllByDateandUserList(String date,String email);
+
     @Query("SELECT count(*) FROM `exercise` WHERE addTime == :date AND user_email == :email")
     int getdatacount(String date,String email);
 
