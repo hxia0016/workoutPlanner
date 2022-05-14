@@ -51,6 +51,7 @@ public class HomeFragment extends Fragment {
         SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String fName=sp.getString("fName",null);
         String[] geocode = sp.getString("geocode",null).split(",");
+
         double lat = Double.parseDouble(geocode[0]);
         double lng = Double.parseDouble(geocode[1]);
 
