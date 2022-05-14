@@ -1,0 +1,78 @@
+
+package com.example.workoutplanner
+
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.work.*
+
+const val input_data_key = "input_data_key"
+const val work_name = "work_a"
+const val output_data_key = "input_data_key"
+const val workout_name = "work_out"
+const val Chuanwork_name = "Chuanwork_a"
+
+const val Shared_Preferences_name = "shp_name"
+
+
+class fakeMain: AppCompatActivity() {
+    private val workManager = WorkManager.getInstance(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView.(R.layout.fake_main)
+
+        val sp = getSharedPreferences(Shared_Preferences_name,Context.MODE_PRIVATE)
+        sp.registerOnSharedPreferenceChangeListener(this)
+        updateView()
+
+        button.setOnClickListener{
+            val workRequestA = creatWork(Chuanwork_name)
+            val workRequestB = creatWork(work_name)
+            workManager.beginWith(workRequestA)
+                .then(workRequestB)
+                .enqueue()
+
+
+            //先后顺序
+            */
+            /*workManager.beginWith(workRequestA)
+                .then(workRequestB)
+                .enqueue()*//*
+
+            //一次click
+            */
+/*          workManager.enqueue(workRequest)
+            workManager.getWorkInfoByIdLiveData(workRequest.id).observe(this, Observer {
+                Log.d("hello", "onCreat: ${it.state}")
+                if (it.state ==WorkInfo.State.SUCCEEDED){
+                    Log.d("hello", "onCreat: ${it.outputData.getString(workout_name)}")
+                }
+            })*//*
+
+
+        }
+
+    }
+
+    private fun updateView(){
+        val sp = getSharedPreferences(Shared_Preferences_name, Context.MODE_PRIVATE)
+        textViewA.text = sp.getInt(workA_name, 0).toString()
+        textViewB.text = sp.getInt(workB_name, 0).toString()
+    }
+    private fun creatWork(name:String): OneTimeWorkRequest{
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        return OneTimeWorkRequestBuilder<Myworker>()
+            .setInputData(workDataOf(input_data_key to name))
+            .build()
+    }
+
+    override fun onSharedPreferencesChanged(sharedPreferences: SharedPreferences?, key:String?){
+        updateView()
+    }
+
+}

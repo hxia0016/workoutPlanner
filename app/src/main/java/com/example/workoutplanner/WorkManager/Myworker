@@ -1,0 +1,26 @@
+/*
+package com.example.workoutplanner
+
+import android.content.Context
+import android.util.Log
+import androidx.work.Worker
+
+import androidx.work.WorkerParameters
+import androidx.work.workDataOf
+
+
+class Myworker(context: Context, workerParams: WorkerParameters): Worker(context, workerParams) {
+    override fun doWork(): Result {
+        val name = inputData.getString(input_data_key)
+        Log.d("hello", "doWork: $name Start")
+        Thread.sleep(3000)
+        val sp = applicationContext.getSharedPreferences(Shared_Preferences_name, Context.MODE_PRIVATE)
+        var number = sp.getInt(name, 0)
+        sp.edit().putInt(name, ++number).apply()
+        //Log.d("hello", "doWork: $name Finished")
+        return Result.success(workDataOf(output_data_key to workout_name))
+
+    }
+}
+
+*/
