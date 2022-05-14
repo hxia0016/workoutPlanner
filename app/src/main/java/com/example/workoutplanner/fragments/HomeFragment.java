@@ -36,7 +36,7 @@ public class HomeFragment extends Fragment {
 
     //weather
     private double lat;
-    private double lon;
+    private double lng;
     private final String url = "https://api.openweathermap.org/data/2.5/weather";
     private final String appid ="9d89733781265480638a045b2dcc4acc";
     DecimalFormat df = new DecimalFormat("#.##");
@@ -50,14 +50,15 @@ public class HomeFragment extends Fragment {
         View view = addBinding.getRoot();
         SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String fName=sp.getString("fName",null);
+        String upperFName = fName.substring(0, 1).toUpperCase() + fName.substring(1);
         String[] geocode = sp.getString("geocode",null).split(",");
 
-        double lat = Double.parseDouble(geocode[0]);
-        double lng = Double.parseDouble(geocode[1]);
+        lat = Double.parseDouble(geocode[0]);
+        lng = Double.parseDouble(geocode[1]);
 
 
         //set the user name
-        addBinding.userName.setText(fName);
+        addBinding.userName.setText(upperFName);
 
         //set the date
         Calendar calendar = Calendar.getInstance();
@@ -69,7 +70,7 @@ public class HomeFragment extends Fragment {
         //set the weather
 //        getWeatherDetails(view);
         OpenWeatherAPI openWeatherAPI = new OpenWeatherAPI();
-        String url =openWeatherAPI.getWeatherAPI(-lat,lng);
+        String url =openWeatherAPI.getWeatherAPI(lat,lng);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             public double temp;
