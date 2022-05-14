@@ -49,6 +49,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,7 +90,20 @@ public class ReportFragment extends Fragment {
 
         List<Exercise> all = new ArrayList<>();
         List<Exercise> Run = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
+        Date date = new Date();//get today
+        String currentDate = dateFormat.format(date);
 
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1); //get yesterday
+        Date date1 = calendar.getTime();
+        String startdate = dateFormat.format(date1);
+        // set default date in Edittext
+        binding.pieDate.setText(currentDate);
+        binding.barDate1.setText(startdate);
+        binding.barDate2.setText(currentDate);
+        // get all exercises data
         exerciseViewModel.getAllExercises().observe(getActivity(), new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
@@ -107,7 +121,7 @@ public class ReportFragment extends Fragment {
                 System.out.println("Running: " +Run);
             }
         });
-
+        //date picker
         binding.pieDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,13 +142,12 @@ public class ReportFragment extends Fragment {
                 month = month +1;
                 String date = day+"/"+month+"/"+year;
                 binding.pieDate.setText(date);
-                Piedate = binding.pieDate.getText().toString();
+
 
             }
 
 
         };
-
         binding.barDate1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,7 +167,7 @@ public class ReportFragment extends Fragment {
                 month = month +1;
                 String date = day+"/"+month+"/"+year;
                 binding.barDate1.setText(date);
-                Bardate1 = binding.barDate1.getText().toString();
+
             }
         };
         binding.barDate2.setOnClickListener(new View.OnClickListener() {
@@ -176,24 +189,38 @@ public class ReportFragment extends Fragment {
                 month = month +1;
                 String date = day+"/"+month+"/"+year;
                 binding.barDate2.setText(date);
-                Bardate2 = binding.barDate2.getText().toString();
+
             }
         };
+
+        // draw chart
         binding.drawpie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                loadpiedata(all,Piedate);
+                Piedate = binding.pieDate.getText().toString();
+                if (Piedate.isEmpty()){
+                    Toast.makeText(getActivity(),"Date can not be empty",Toast.LENGTH_LONG).show();
+                }else{
+                    loadpiedata(all,Piedate);
+                }
+
             }
         });
 
         binding.drawbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Bardate2.compareTo(Bardate1)>0) {
+                Bardate1 = binding.barDate1.getText().toString();
+                Bardate2 = binding.barDate2.getText().toString();
+                //check if date range is wrong
+                if(Bardate2.compareTo(Bardate1)>=0) {
+
                     loadbardata(all, Bardate1, Bardate2);
                 }
                 else{
+
+                    Toast.makeText(getActivity(),"Second date should be after the first date!",Toast.LENGTH_LONG).show();
                     return;
                 }
             }
@@ -208,6 +235,8 @@ public class ReportFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    // draw pie chart
     public void loadpiedata(List<Exercise>alldata,String date){
         float completed = 0;
         float imcompleted = 0;
@@ -215,6 +244,7 @@ public class ReportFragment extends Fragment {
         for (Exercise temp : alldata) {
             System.out.println(temp.getAddTime());
         }
+        // get data in selected date
         List<Exercise> oneday = new ArrayList<>();
         for (Exercise temp : alldata) {
             if (Piedate.equals(temp.getAddTime()) ){
@@ -224,6 +254,7 @@ public class ReportFragment extends Fragment {
         System.out.println("one day: " +oneday);
         System.out.println("Pie date: " +Piedate);
         for (Exercise temp : oneday) {
+            // get the number of completed and incompleted exercises
             if (temp.isStates() == true){
                 completed +=1.0;
             }
@@ -233,6 +264,8 @@ public class ReportFragment extends Fragment {
         }
         System.out.println("completed: " +completed);
         System.out.println("imcompleted: " +imcompleted);
+
+        //set data
         ArrayList<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(completed,"Completed"));
         entries.add(new PieEntry(imcompleted,"Incompleted"));
@@ -240,9 +273,6 @@ public class ReportFragment extends Fragment {
 
         PieDataSet Pdataset = new PieDataSet(entries,null);
         Pdataset.setDrawIcons(false);
-
-
-
         ArrayList<Integer> piecolor = new ArrayList<>();
         piecolor.add(Color.rgb(255,0,0));
         piecolor.add(Color.rgb(0,111,0));
@@ -262,6 +292,8 @@ public class ReportFragment extends Fragment {
         ArrayList<BarEntry> complete = new ArrayList<>();
         ArrayList<BarEntry> incomplete = new ArrayList<>();
         List<String> datelist = new ArrayList<>();
+
+        // get date range
         List<Exercise> daterange = new ArrayList<>();
         for (Exercise temp : alldata) {
             if (temp.getAddTime().compareTo(startdate)>=0 && temp.getAddTime().compareTo(enddate)<=0){
@@ -270,13 +302,15 @@ public class ReportFragment extends Fragment {
 
         }
         System.out.println("date range: " +daterange);
-
+        // get all date
         for(Exercise temp:daterange){
             datelist.add(temp.getAddTime());
 
         }
+        // remove duplicate to get unique date
         datelist = removeDuplicate(datelist);
         System.out.println("datelist : "+datelist);
+
         List<Integer> completelist = new ArrayList<>();
         List<Integer> incompletelist = new ArrayList<>();
         for(int i = 0; i <datelist.size();i++){
@@ -290,6 +324,7 @@ public class ReportFragment extends Fragment {
                     }
                 }
             }
+            // get number of completed and incompleted in each date
             completelist.add(completed);
             incompletelist.add(imcompleted);
         }
@@ -298,7 +333,7 @@ public class ReportFragment extends Fragment {
             incomplete.add(new BarEntry(i,incompletelist.get(i)));
         }
 
-
+        // set data
         BarDataSet bar1 = new BarDataSet(incomplete,"Incompleted");
         bar1.setColor(Color.RED);
         BarDataSet bar2 = new BarDataSet(complete,"Completed");
@@ -319,7 +354,6 @@ public class ReportFragment extends Fragment {
 
         binding.barchart.invalidate();
     }
-// Reference:https://blog.csdn.net/qq_21376985/article/details/50971512
 
 
 
