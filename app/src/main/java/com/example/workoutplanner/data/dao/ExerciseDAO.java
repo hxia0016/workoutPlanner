@@ -39,11 +39,11 @@ public interface ExerciseDAO {
     @Query("SELECT count(*) FROM `exercise` WHERE addTime == :date AND user_email == :email")
     int getdatacount(String date,String email);
 
-    @Query("SELECT uid FROM `exercise` WHERE addTime == :date AND user_email == :email")
-    List getdatauid(String date,String email);
+    /*@Query("SELECT uid FROM `exercise` WHERE addTime == :date AND user_email == :email")
+    List getdatauid(String date,String email);*/
 
-    @Query("SELECT * FROM `exercise` WHERE uid = uidlist[i]")
-    Exercise getoneData(List uidlist,int i);
+    /*@Query("SELECT * FROM `exercise` WHERE uid = uidlist[i]")
+    Exercise getoneData(List uidlist,int i);*/
 
     @Insert
     void insert(Exercise exercise);
