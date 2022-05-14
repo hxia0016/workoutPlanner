@@ -50,7 +50,7 @@ public class WorkMg extends Worker {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        DatabaseReference myRef = r_database.getReference("exerciseDatatestbd");
+        DatabaseReference myRef = r_database.getReference("exerciseDatatestbd22");
 
         String token = currentUser.getUid();
         String exerciseid = date+token;
@@ -59,6 +59,7 @@ public class WorkMg extends Worker {
         Log.d("doWork", "testdate test " + testdate);
         Log.d("doWork", "token test " + token);
         Log.d("doWork", "Useremail test " + LoginUser.StoreUseremail);
+        Log.d("doWork", "exerciseid test " + exerciseid);
 
         Exercise exercise = ExerciseDatabase.getInstance(getApplicationContext()).exerciseDAO().findByDateandUser(date, LoginUser.StoreUseremail);
 

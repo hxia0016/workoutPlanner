@@ -20,6 +20,8 @@ import com.android.volley.toolbox.Volley;
 
 import com.example.workoutplanner.MainActivity;
 import com.example.workoutplanner.api.OpenWeatherAPI;
+
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
@@ -75,14 +77,6 @@ public class HomeFragment extends Fragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         addBinding.time.setText("Today is: "+day+"/"+month);
 
-
-        //set the weather
-//        getWeatherDetails(view);
-        OpenWeatherAPI openWeatherAPI = new OpenWeatherAPI();
-        String url =openWeatherAPI.getWeatherAPI(-lat,lng);
-        String url =openWeatherAPI.getWeatherAPI(-37.840935,144.946457);
-        getWeatherDetails(view);
-
         //set upload button function
         addBinding.uploadbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,8 +90,17 @@ public class HomeFragment extends Fragment {
                 String timeNow = new SimpleDateFormat("dd/mm/yyyy HH:mm:ss").format(currentTime);
                 //get exercise database
                 //ExerciseData newEx = new Exercise(timeNow);
-                UploadData(timeNow);
+                Log.d("Method be called", "HomeFragment.UploadData");
 
+
+                WorkRequest uploadWorkRequest =
+                        new OneTimeWorkRequest.Builder(WorkMg.class)
+                                .build();
+                WorkManager
+                        .getInstance(getContext())
+                        .enqueue(uploadWorkRequest);
+
+                System.out.println("HomeFragment.UploadData function successful:"+timeNow);
 
                 System.out.println("HomeFragment.Upload button successful:"+timeNow);
 
@@ -105,42 +108,10 @@ public class HomeFragment extends Fragment {
         });
 
 
-
-        return view;
-    }
-
-
-    //Upload data
-    private void UploadData(String timeNow) {
-
-        Log.d("Method be called", "HomeFragment.UploadData");
-
-
-        WorkRequest uploadWorkRequest =
-                new OneTimeWorkRequest.Builder(WorkMg.class)
-                        .build();
-        WorkManager
-                .getInstance(getContext())
-                .enqueue(uploadWorkRequest);
-
-        System.out.println("HomeFragment.UploadData function successful:"+timeNow);
-
-        //adapter.addExercise(ex);
-        //adapter.notifyDataSetChanged();
-    }
-
-
-    //get the weather
-    public void getWeatherDetails(View view){
-        String tempUrl = "";
-        Double reaLat = -37.840935;
-        Double reaLon = 144.946457;
-
-
-        if (reaLat == null || reaLon == null){
-            addBinding.userName.setText("Can not capture the location");
-        }else {
-            tempUrl = url+"?lat="+reaLat+"&lon="+reaLon+"&appid="+appid;
+        //set the weather
+//        getWeatherDetails(view);
+        OpenWeatherAPI openWeatherAPI = new OpenWeatherAPI();
+        String url =openWeatherAPI.getWeatherAPI(-lat,lng);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             public double temp;
