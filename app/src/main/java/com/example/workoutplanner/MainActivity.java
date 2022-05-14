@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         PeriodicWorkRequest dailyworkRequest = new PeriodicWorkRequest.Builder(WorkMg.class,15, TimeUnit.MINUTES)
-                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-                .addTag("Upload data per 20m ")
+                //.setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                .addTag("Upload data per 15m ")
                 .build();
 
         WorkManager.getInstance(this).enqueue(dailyworkRequest);
