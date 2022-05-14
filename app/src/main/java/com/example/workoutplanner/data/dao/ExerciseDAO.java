@@ -30,6 +30,21 @@ public interface ExerciseDAO {
     @Query("SELECT * FROM `exercise` WHERE user_email == :email")
     Exercise findByUser(String email);
 
+    @Query("SELECT * FROM `exercise` WHERE addTime == :date AND user_email == :email LIMIT 1")
+    Exercise findByDateandUser(String date,String email);
+
+    @Query("SELECT * FROM `exercise` WHERE addTime == :date AND user_email == :email")
+    LiveData<List<Exercise>> getAllByDateandUser(String date,String email);
+
+    @Query("SELECT count(*) FROM `exercise` WHERE addTime == :date AND user_email == :email")
+    int getdatacount(String date,String email);
+
+    /*@Query("SELECT uid FROM `exercise` WHERE addTime == :date AND user_email == :email")
+    List getdatauid(String date,String email);*/
+
+    /*@Query("SELECT * FROM `exercise` WHERE uid = uidlist[i]")
+    Exercise getoneData(List uidlist,int i);*/
+
     @Insert
     void insert(Exercise exercise);
 
@@ -43,5 +58,7 @@ public interface ExerciseDAO {
 
     @Query("UPDATE `exercise` SET states = :state WHERE user_email == :email AND uid=:id")
     void completePlan(boolean state,String email,String id);
+
+
 
 }

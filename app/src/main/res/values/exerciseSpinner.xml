@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="exercisespinnerclass">
-        <item>Run</item>
-        <item>Walk</item>
+        <item>Running</item>
+        <item>Walking</item>
         <item>Swimming</item>
+        <item>Yoga</item>
+        <item>Strength Training</item>
+        <item>Biking</item>>
+        <item>Pilates</item>
+        <item>Jump rope</item>
+        <item>Aerobic exercise</item>
     </string-array>
 </resources>

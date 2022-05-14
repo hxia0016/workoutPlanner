@@ -46,6 +46,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
         return new ViewHolder(binding);
     }
 
+
+
     // this method binds the view holder created with data that will be displayed
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder viewHolder, int position) {

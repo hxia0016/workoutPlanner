@@ -32,6 +32,7 @@ public class PlanViewModel extends AndroidViewModel {
         pRepository.insert(plan);
     }
 
+
     public void deleteAll() {
         pRepository.deleteAll();
     }

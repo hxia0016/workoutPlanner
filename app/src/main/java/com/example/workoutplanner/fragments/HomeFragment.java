@@ -3,6 +3,7 @@ package com.example.workoutplanner.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import com.example.workoutplanner.MainActivity;
+import com.example.workoutplanner.api.OpenWeatherAPI;
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
 
 import org.json.JSONArray;
@@ -32,23 +35,30 @@ public class HomeFragment extends Fragment {
     public HomeFragment(){}
 
     //weather
-    private double lat = -37.840935;
-    private double lon = 144.946457;
+    private double lat;
+    private double lng;
     private final String url = "https://api.openweathermap.org/data/2.5/weather";
     private final String appid ="9d89733781265480638a045b2dcc4acc";
     DecimalFormat df = new DecimalFormat("#.##");
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         // Inflate the View for this fragment
         addBinding = HomeFragmentBinding.inflate(inflater, container, false);
         View view = addBinding.getRoot();
         SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String fName=sp.getString("fName",null);
+        String upperFName = fName.substring(0, 1).toUpperCase() + fName.substring(1);
+        String[] geocode = sp.getString("geocode",null).split(",");
+
+        lat = Double.parseDouble(geocode[0]);
+        lng = Double.parseDouble(geocode[1]);
 
 
         //set the user name
-        addBinding.userName.setText(fName);
+        addBinding.userName.setText(upperFName);
 
         //set the date
         Calendar calendar = Calendar.getInstance();
@@ -58,51 +68,42 @@ public class HomeFragment extends Fragment {
 
 
         //set the weather
-        getWeatherDetails(view);
+//        getWeatherDetails(view);
+        OpenWeatherAPI openWeatherAPI = new OpenWeatherAPI();
+        String url =openWeatherAPI.getWeatherAPI(lat,lng);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            public double temp;
+            public double getTemp(){
+                return this.temp;
+            }
+            @Override
+            public void onResponse(String response) {
+                String output = "";
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    JSONArray jsonArray = jsonResponse.getJSONArray("weather");
+                    JSONObject jsonObjectWeather = jsonArray.getJSONObject(0);
+                    JSONObject jsonObjectMain = jsonResponse.getJSONObject("main");
+                    temp = jsonObjectMain.getDouble("temp") - 273.15;
+                    addBinding.temp.setText("Today's temperature is : "+df.format(temp)+" ℃");
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(stringRequest);
+
+
         return view;
     }
-    //get the weather
-    public void getWeatherDetails(View view){
-        String tempUrl = "";
-        Double reaLat = -37.840935;
-        Double reaLon = 144.946457;
 
-
-        if (reaLat == null || reaLon == null){
-            addBinding.userName.setText("Can not capture the location");
-        }else {
-            tempUrl = url+"?lat="+reaLat+"&lon="+reaLon+"&appid="+appid;
-
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, tempUrl, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    //Log.d("response",response);
-                    String output = "";
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        JSONArray jsonArray = jsonResponse.getJSONArray("weather");
-                        JSONObject jsonObjectWeather = jsonArray.getJSONObject(0);
-                        JSONObject jsonObjectMain = jsonResponse.getJSONObject("main");
-                        double temp = jsonObjectMain.getDouble("temp") - 273.15;
-                        System.out.println(temp);
-                        addBinding.temp.setText("Today's temperature is : "+df.format(temp)+" ℃");
-                        //Log.d("response",df.format(temp));
-
-                    }catch (JSONException e){
-                        e.printStackTrace();
-                    }
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getActivity(),"ERROR",Toast.LENGTH_LONG).show();
-                }
-            });
-            RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-            requestQueue.add(stringRequest);
-        }
-    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
