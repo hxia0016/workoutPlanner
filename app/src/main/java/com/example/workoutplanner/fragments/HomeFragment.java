@@ -7,9 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,13 +22,23 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import com.example.workoutplanner.MainActivity;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
+import com.example.workoutplanner.WorkMg;
 import com.example.workoutplanner.databinding.HomeFragmentBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
@@ -63,8 +76,54 @@ public class HomeFragment extends Fragment {
 
         //set the weather
         getWeatherDetails(view);
+
+        //set upload button function
+        addBinding.uploadbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //get local data
+                //ExerciseData = ;
+                //String exercisedata = "{test exercisedata}";
+                Log.d("Method be called", "HomeFragment.uploadbutton.setOnClickListener");
+                //get current Time
+                long currentTime = System.currentTimeMillis();
+                String timeNow = new SimpleDateFormat("dd/mm/yyyy HH:mm:ss").format(currentTime);
+                //get exercise database
+                //ExerciseData newEx = new Exercise(timeNow);
+                UploadData(timeNow);
+
+
+                System.out.println("HomeFragment.Upload button successful:"+timeNow);
+
+            }
+        });
+
+
+
         return view;
     }
+
+
+    //Upload data
+    private void UploadData(String timeNow) {
+
+        Log.d("Method be called", "HomeFragment.UploadData");
+
+
+        WorkRequest uploadWorkRequest =
+                new OneTimeWorkRequest.Builder(WorkMg.class)
+                        .build();
+        WorkManager
+                .getInstance(getContext())
+                .enqueue(uploadWorkRequest);
+
+        System.out.println("HomeFragment.UploadData function successful:"+timeNow);
+
+        //adapter.addExercise(ex);
+        //adapter.notifyDataSetChanged();
+    }
+
+
     //get the weather
     public void getWeatherDetails(View view){
         String tempUrl = "";
