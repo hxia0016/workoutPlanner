@@ -108,6 +108,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        //set share button function
+
+
+
+
 
         //set the weather
 //        getWeatherDetails(view);

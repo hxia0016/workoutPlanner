@@ -12,9 +12,11 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 
 import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 
 import java.util.Calendar;
@@ -27,6 +29,7 @@ import com.example.workoutplanner.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
+    private long delay;
 
 
 
@@ -37,25 +40,40 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        long currentTime = System.currentTimeMillis();
+        //long currentTime = System.currentTimeMillis();
         Calendar currentdate = Calendar.getInstance();
         Calendar dueDate = Calendar.getInstance();
-        dueDate.set(Calendar.HOUR_OF_DAY, 14);
-        dueDate.set(Calendar.MINUTE, 51);
+        dueDate.set(Calendar.HOUR_OF_DAY, 11);
+        dueDate.set(Calendar.MINUTE, 07);
         dueDate.set(Calendar.SECOND, 0);
         if (dueDate.before(currentdate)) {
             dueDate.add(Calendar.HOUR_OF_DAY, 24);
         }
         long dueDatetime = dueDate.getTimeInMillis();
-        long delay = dueDatetime - currentTime;
+        long currentTime = currentdate.getTimeInMillis();
+        delay = dueDatetime - currentTime;
 
 
-        PeriodicWorkRequest dailyworkRequest = new PeriodicWorkRequest.Builder(WorkMg.class,15, TimeUnit.MINUTES)
-                //.setInitialDelay(delay, TimeUnit.MILLISECONDS)
-                .addTag("Upload data per 15m ")
+        /*PeriodicWorkRequest dailyworkRequest = new PeriodicWorkRequest.Builder(WorkMg.class,24, TimeUnit.HOURS)
+                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                .addTag("Upload data per 24h ")
+                .build();*/
+
+        /*WorkRequest dailyworkRequest = new OneTimeWorkRequest.Builder(WorkMg.class)
+                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                .addTag("Upload data per 24h ")
                 .build();
 
-        WorkManager.getInstance(this).enqueue(dailyworkRequest);
+        WorkManager.getInstance(this).enqueue(dailyworkRequest);*/
+
+        WorkRequest dailyworkRequest =
+                new OneTimeWorkRequest.Builder(WorkMg.class)
+                        .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                        .addTag("Upload data per 24h ")
+                        .build();
+        WorkManager
+                .getInstance(this)
+                .enqueue(dailyworkRequest);
 
 
         setSupportActionBar(binding.appBar.toolbar);
@@ -77,5 +95,21 @@ public class MainActivity extends AppCompatActivity {
         //Sets up a Toolbar for use with a NavController.
         NavigationUI.setupWithNavController(binding.appBar.toolbar,navController, mAppBarConfiguration);
     }
+
+    /*public long getDelay() {
+
+        Calendar currentdate = Calendar.getInstance();
+        Calendar dueDate = Calendar.getInstance();
+        dueDate.set(Calendar.HOUR_OF_DAY, 06);
+        dueDate.set(Calendar.MINUTE, 38);
+        dueDate.set(Calendar.SECOND, 0);
+        if (dueDate.before(currentdate)) {
+            dueDate.add(Calendar.HOUR_OF_DAY, 24);
+        }
+        long dueDatetime = dueDate.getTimeInMillis();
+        long currentTime = currentdate.getTimeInMillis();
+        delay = dueDatetime - currentTime;
+        rerurn delay;
+    }*/
 
 }
