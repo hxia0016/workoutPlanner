@@ -47,12 +47,14 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
     private DatabaseReference userRef;
     private static final String USER = "Users";
     private String token;
+    public static String StoreUseremail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_login_user);
+
         // set click listener for register button
         register = (TextView) findViewById(R.id.register);
         register.setOnClickListener(this);
@@ -166,6 +168,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
     public void updateUI(FirebaseUser currentUser){
         Intent newIntent = new Intent(this, MainActivity.class);
         String userEmail = currentUser.getEmail();
+        StoreUseremail = currentUser.getEmail();
         SharedPreferences sp= LoginUser.this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         userRef.addValueEventListener(new ValueEventListener() {
@@ -224,5 +227,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
         return p1;
     }
+
+
 
 }

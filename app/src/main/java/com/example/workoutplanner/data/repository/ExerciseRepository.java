@@ -74,6 +74,15 @@ public class ExerciseRepository {
         });
     }
 
+    public void getAllByDateandUser(String date,String email){
+        ExerciseDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                exerciseDAO.getAllByDateandUser(date,email);
+            }
+        });
+    }
+
     public LiveData<List<Exercise>>  getAllUnComplete(){
         return exerciseDAO.getAllUnComplete();
     }

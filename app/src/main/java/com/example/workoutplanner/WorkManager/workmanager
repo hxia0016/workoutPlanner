@@ -1,47 +1,77 @@
+/*
 package com.example.workoutplanner.WorkManager;
 
 import android.content.Context;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-import androidx.work.Data;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Database;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+import androidx.work.*
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
+
+import com.example.workoutplanner.MainActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import com.example.workoutplanner.data.entity.Plan;
-import com.example.workoutplanner.data.database.PlanDatabase;
+import com.example.workoutplanner.data.entity.Exercise;
+import com.example.workoutplanner.data.database.ExerciseDatabase;
+import com.example.workoutplanner.data.dao.ExerciseDAO;
 import com.example.workoutplanner.data.repository.PlanRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class WorkManager extends Worker{
+
+
+public class WorkManager extends Worker {
+    Exercise exercise;
+
     public WorkManager(
             @NonNull Context context,
-            @NonNull WorkerParameters params) {
-        super(context, params);
+            @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
     }
 
-
-
-
-    private Plan convertData(Data inputData) {
-        return new Plan(
-                inputData.getString("activity"),
-                inputData.getInt("duration",-1),
-                inputData.getBoolean("complete",false)
-
-        );
-    }
-
-    @Override
     public Result doWork() {
+        SimpleDateFormat updatetime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String date = updatetime.format(new Date());
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("exerciseDatatest");
+
+        Exercise exercise = ExerciseDatabase.getInstance(getApplicationContext()).ExerciseDAO().findByDate(date, MainActivity.email);
+
+        if (exercise != null) {
+            myRef.child("uploadDate").push().setValue(date);
+            myRef.child("uploadDate").child("exerciseData").push().setValue(exercise);
+            Log.d("upload", "doWork Start " + date);
+        } else {
+            myRef.child("record").push().setValue("No record for" + date);
+            Log.d("No record for", " " + date);
+        }
+
+    }
+
+}
+
+
+
+
+
+
+*/
+/*   @Override
+   public Result doWork() {
 
         Plan Plan = convertData(getInputData());
 
@@ -54,11 +84,12 @@ public class WorkManager extends Worker{
             Log.i("SUCCESS", "DATA UPLOADED: \n" + Plan.toString());
             return Result.success();
         }
-    }
+    }*//*
 
-/////还需要print meaningful messages with timestamps from the methods called on Logcat (print the method name too)
-    ///参见Marking Guide
-    private void updateDataToFirebase(Plan Data) {
+
+///////还需要print meaningful messages with timestamps from the methods called on Logcat (print the method name too)
+//    ///参见Marking Guide
+    private Result deWork() {
         SimpleDateFormat updatetime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dailyRecord = database.getReference();
@@ -80,3 +111,4 @@ public class WorkManager extends Worker{
 
     }
 }
+*/
