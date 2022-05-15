@@ -71,7 +71,7 @@ public class PlanFragment extends Fragment {
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
 
-        exerciseViewModel.getAllUnComplete().observe(getActivity(), new Observer<List<Exercise>>() {
+        exerciseViewModel.getAllUnComplete(userEmail).observe(getActivity(), new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
                 adapter.setExercise(exercises);

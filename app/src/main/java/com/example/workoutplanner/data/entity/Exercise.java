@@ -101,5 +101,7 @@ public class Exercise {
                 ", addTime='" + addTime + '\'' +
                 '}';
     }
+
+
 }
 

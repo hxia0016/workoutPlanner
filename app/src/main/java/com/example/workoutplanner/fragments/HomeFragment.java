@@ -52,6 +52,10 @@ public class HomeFragment extends Fragment {
     private final String url = "https://api.openweathermap.org/data/2.5/weather";
     private final String appid ="9d89733781265480638a045b2dcc4acc";
     DecimalFormat df = new DecimalFormat("#.##");
+
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -146,6 +150,10 @@ public class HomeFragment extends Fragment {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(stringRequest);
+
+
+        //Pedometer
+
 
 
         return view;

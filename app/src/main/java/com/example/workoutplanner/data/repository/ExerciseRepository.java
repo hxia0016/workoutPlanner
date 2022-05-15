@@ -91,8 +91,8 @@ public class ExerciseRepository {
         });
     }
 
-    public LiveData<List<Exercise>>  getAllUnComplete(){
-        return exerciseDAO.getAllUnComplete();
+    public LiveData<List<Exercise>>  getAllUnComplete(String userEmail){
+        return exerciseDAO.getAllUnComplete(userEmail);
     }
 
 
