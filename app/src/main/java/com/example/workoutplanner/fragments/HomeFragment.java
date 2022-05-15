@@ -64,6 +64,8 @@ public class HomeFragment extends Fragment {
         // Inflate the View for this fragment
         addBinding = HomeFragmentBinding.inflate(inflater, container, false);
         View view = addBinding.getRoot();
+
+        // use SharedPreferences to pass user information
         SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String fName=sp.getString("fName","name");
         String upperFName = fName.substring(0, 1).toUpperCase() + fName.substring(1);

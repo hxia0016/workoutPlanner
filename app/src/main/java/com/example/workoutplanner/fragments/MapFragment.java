@@ -49,7 +49,7 @@ public class MapFragment extends Fragment {
 
         SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String fName=sp.getString("fName",null);
-        String[] geocode = sp.getString("geocode",null).split(",");
+        String[] geocode = sp.getString("geocode","145.045837, -37.876823").split(",");
         Double lat = Double.parseDouble(geocode[0]);
         Double lng = Double.parseDouble(geocode[1]);
 
