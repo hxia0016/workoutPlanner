@@ -82,19 +82,17 @@ public class HomeFragment extends Fragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         addBinding.time.setText("Today is: "+day+"/"+month);
 
+
         //set upload button function
         addBinding.uploadbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //get local data
-                //ExerciseData = ;
-                //String exercisedata = "{test exercisedata}";
                 Log.d("Method be called", "HomeFragment.uploadbutton.setOnClickListener");
                 //get current Time
                 long currentTime = System.currentTimeMillis();
                 String timeNow = new SimpleDateFormat("dd/mm/yyyy HH:mm:ss").format(currentTime);
                 //get exercise database
-                //ExerciseData newEx = new Exercise(timeNow);
                 Log.d("Method be called", "HomeFragment.UploadData");
 
 
@@ -104,15 +102,13 @@ public class HomeFragment extends Fragment {
                 WorkManager
                         .getInstance(getContext())
                         .enqueue(uploadWorkRequest);
+                Log.d("HomeFragment", "function successful"+timeNow);
 
-                System.out.println("HomeFragment.UploadData function successful:"+timeNow);
 
-                System.out.println("HomeFragment.Upload button successful:"+timeNow);
 
             }
         });
 
-        //set share button function
 
 
 

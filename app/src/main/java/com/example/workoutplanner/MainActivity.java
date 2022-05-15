@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        //long currentTime = System.currentTimeMillis();
+        //set delay
         Calendar currentdate = Calendar.getInstance();
         Calendar dueDate = Calendar.getInstance();
         dueDate.set(Calendar.HOUR_OF_DAY, 23);
@@ -54,18 +54,8 @@ public class MainActivity extends AppCompatActivity {
         delay = dueDatetime - currentTime;
 
 
-        /*PeriodicWorkRequest dailyworkRequest = new PeriodicWorkRequest.Builder(WorkMg.class,24, TimeUnit.HOURS)
-                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-                .addTag("Upload data per 24h ")
-                .build();*/
 
-        /*WorkRequest dailyworkRequest = new OneTimeWorkRequest.Builder(WorkMg.class)
-                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-                .addTag("Upload data per 24h ")
-                .build();
-
-        WorkManager.getInstance(this).enqueue(dailyworkRequest);*/
-
+        //set WorkRequest and send enqueue
         WorkRequest dailyworkRequest =
                 new OneTimeWorkRequest.Builder(WorkMg.class)
                         .setInitialDelay(delay, TimeUnit.MILLISECONDS)
@@ -82,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_map_fragment,
                 R.id.nav_report_fragment,
                 R.id.nav_profile_fragment)
-//to display the Navigation button as a drawer symbol,not being shown as an Up button
+    //to display the Navigation button as a drawer symbol,not being shown as an Up button
                 .setOpenableLayout(binding.drawerLayout).build();
 
         FragmentManager fragmentManager= getSupportFragmentManager();
@@ -96,20 +86,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.appBar.toolbar,navController, mAppBarConfiguration);
     }
 
-    /*public long getDelay() {
 
-        Calendar currentdate = Calendar.getInstance();
-        Calendar dueDate = Calendar.getInstance();
-        dueDate.set(Calendar.HOUR_OF_DAY, 06);
-        dueDate.set(Calendar.MINUTE, 38);
-        dueDate.set(Calendar.SECOND, 0);
-        if (dueDate.before(currentdate)) {
-            dueDate.add(Calendar.HOUR_OF_DAY, 24);
-        }
-        long dueDatetime = dueDate.getTimeInMillis();
-        long currentTime = currentdate.getTimeInMillis();
-        delay = dueDatetime - currentTime;
-        rerurn delay;
-    }*/
 
 }

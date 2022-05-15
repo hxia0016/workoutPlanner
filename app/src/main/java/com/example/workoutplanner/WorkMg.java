@@ -42,6 +42,7 @@ public class WorkMg extends Worker {
         super(context, workerParams);
     }
 
+    //set do Work function
     public Result doWork() {
         SimpleDateFormat updatetime = new SimpleDateFormat("ddMyyyy");
         SimpleDateFormat updatetimeselect = new SimpleDateFormat("dd/M/yyyy");
@@ -51,25 +52,19 @@ public class WorkMg extends Worker {
         String testdate = testtime.format(new Date());
 
         FirebaseDatabase r_database = FirebaseDatabase.getInstance();
-        //FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        DatabaseReference myRef = r_database.getReference("exerciseDatatestbd22");
+        DatabaseReference myRef = r_database.getReference("exerciseDatabase");
 
+        //get ueserid token
         String token = currentUser.getUid();
         String exerciseid = date + token;
 
 
-        Log.d("Method be called", "doWork");
-        Log.d("doWork", "testdate test " + testdate);
-        Log.d("doWork", "token test " + token);
-        Log.d("doWork", "Useremail test " + LoginUser.StoreUseremail);
-        Log.d("doWork", "exerciseid test " + exerciseid);
-
-        //Exercise exercise = ExerciseDatabase.getInstance(getApplicationContext()).exerciseDAO().findByDateandUser(dateselect, LoginUser.StoreUseremail);
-
+        //get user's exerciselist
         List<Exercise> exerciselist = ExerciseDatabase.getInstance(getApplicationContext()).exerciseDAO().getAllByDateandUserList(dateselect, LoginUser.StoreUseremail);
-        //LiveData<List<Exercise>> exercise_db = ExerciseDatabase.getInstance(getApplicationContext()).exerciseDAO().getAllByDateandUser(dateselect, LoginUser.StoreUseremail);
+
+        //delete ExerciseDatabase in this date firebase database first for update
         myRef.child(exerciseid).setValue(nullexercise)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -83,10 +78,10 @@ public class WorkMg extends Worker {
                         Log.w("set Null ", "Failed", e);
                     }
                 });
-        Log.d("doWork", "exerciselist test " + exerciselist);
 
+        //set value for each exercise
         for (Exercise temp : exerciselist) {
-            Log.d("doWork", "temp test " + temp);
+
             Log.d("Method be called", "Firebase setValue");
 
             myRef.child(exerciseid).push().setValue(temp)
