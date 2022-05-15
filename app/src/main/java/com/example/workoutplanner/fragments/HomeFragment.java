@@ -65,9 +65,9 @@ public class HomeFragment extends Fragment {
         addBinding = HomeFragmentBinding.inflate(inflater, container, false);
         View view = addBinding.getRoot();
         SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String fName=sp.getString("fName",null);
+        String fName=sp.getString("fName","name");
         String upperFName = fName.substring(0, 1).toUpperCase() + fName.substring(1);
-        String[] geocode = sp.getString("geocode",null).split(",");
+        String[] geocode = sp.getString("geocode","145.045837, -37.876823").split(",");
 
         lat = Double.parseDouble(geocode[0]);
         lng = Double.parseDouble(geocode[1]);
