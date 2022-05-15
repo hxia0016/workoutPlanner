@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         //long currentTime = System.currentTimeMillis();
         Calendar currentdate = Calendar.getInstance();
         Calendar dueDate = Calendar.getInstance();
-        dueDate.set(Calendar.HOUR_OF_DAY, 11);
-        dueDate.set(Calendar.MINUTE, 07);
+        dueDate.set(Calendar.HOUR_OF_DAY, 0);
+        dueDate.set(Calendar.MINUTE, 5);
         dueDate.set(Calendar.SECOND, 0);
         if (dueDate.before(currentdate)) {
             dueDate.add(Calendar.HOUR_OF_DAY, 24);
