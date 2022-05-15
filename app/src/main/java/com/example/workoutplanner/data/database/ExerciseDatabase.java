@@ -7,9 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.workoutplanner.data.dao.ExerciseDAO;
-import com.example.workoutplanner.data.dao.PlanDAO;
 import com.example.workoutplanner.data.entity.Exercise;
-import com.example.workoutplanner.data.entity.Plan;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
