@@ -21,12 +21,12 @@ public class ExerciseRepository {
     public ExerciseRepository(Application application){
         ExerciseDatabase db = ExerciseDatabase.getInstance(application);
         exerciseDAO =db.exerciseDAO();
-        allExercises= exerciseDAO.getAll();
+//        allExercises= exerciseDAO.getAll();
     }
 
     // Room executes this query on a separate thread
-    public LiveData<List<Exercise>> getAllExercises() {
-        return allExercises;
+    public LiveData<List<Exercise>> getAllExercises(String email) {
+        return exerciseDAO.getAll(email);
     }
 
     public void insert(final Exercise exercise){

@@ -21,7 +21,7 @@ public class ExerciseViewModel extends AndroidViewModel {
     public ExerciseViewModel(@NonNull Application application) {
         super(application);
         eRepository = new ExerciseRepository(application);
-        allExercises =eRepository.getAllExercises();
+//        allExercises =eRepository.getAllExercises();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -29,8 +29,8 @@ public class ExerciseViewModel extends AndroidViewModel {
         return eRepository.findByUserEmail(userEmail);
     }
 
-    public LiveData<List<Exercise>> getAllExercises() {
-        return allExercises;
+    public LiveData<List<Exercise>> getAllExercises(String email) {
+        return eRepository.getAllExercises(email);
     }
 
     public void insert(Exercise ex) {

@@ -47,7 +47,7 @@
         <provider android:authorities="com.facebook.app.FacebookContentProvider1234"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true" />
-        <queries><provider android:authorities="com.facebook.katana.provider.PlatformProvider" /></queries>
+<!--        <queries><provider android:authorities="com.facebook.katana.provider.PlatformProvider" /></queries>-->
 
     </application>
 

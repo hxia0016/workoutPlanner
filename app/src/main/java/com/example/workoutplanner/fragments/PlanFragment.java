@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -63,6 +64,7 @@ public class PlanFragment extends Fragment {
         SharedPreferences sp= getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         userEmail=sp.getString("email",null);
 
+        //Toast.makeText(getActivity(),userEmail+"",Toast.LENGTH_LONG).show();
 
         //The recycle view
         adapter = new RecyclerViewAdapter();

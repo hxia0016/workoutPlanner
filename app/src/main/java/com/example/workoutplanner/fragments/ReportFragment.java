@@ -100,7 +100,7 @@ public class ReportFragment extends Fragment {
         binding.barDate1.setText(startdate);
         binding.barDate2.setText(currentDate);
         // get all exercises data
-        exerciseViewModel.getAllExercises().observe(getActivity(), new Observer<List<Exercise>>() {
+        exerciseViewModel.getAllExercises(userEmail).observe(getActivity(), new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
                 String run = "Run";

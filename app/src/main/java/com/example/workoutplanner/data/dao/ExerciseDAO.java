@@ -13,8 +13,8 @@ import java.util.List;
 
 @Dao
 public interface ExerciseDAO {
-    @Query("SELECT * FROM `exercise`")
-    LiveData<List<Exercise>> getAll();
+    @Query("SELECT * FROM `exercise` WHERE user_email == :email")
+    LiveData<List<Exercise>> getAll(String email);
 
     @Query("SELECT * FROM `exercise` WHERE states == 0 AND user_email == :email")
     LiveData<List<Exercise>> getAllUnComplete(String email);
