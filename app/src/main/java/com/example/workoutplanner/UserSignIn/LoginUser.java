@@ -157,18 +157,12 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         });
     }
 
-   /* @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        updateUI(currentUser);
-    }*/
-
+    // go to home screen
     public void updateUI(FirebaseUser currentUser){
-        Intent newIntent = new Intent(this, MainActivity.class);
+
         String userEmail = currentUser.getEmail();
         StoreUseremail = currentUser.getEmail();
+        // use SharedPreferences to store user information
         SharedPreferences sp= LoginUser.this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         userRef.addValueEventListener(new ValueEventListener() {
@@ -176,6 +170,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds: snapshot.getChildren()){
                     if(ds.child("email").getValue().equals(userEmail)){
+                        // Use SharedPreferences to store user information
                         editor.putString("uid", token);
                         editor.putString("email", ds.child("email").getValue(String.class));
                         editor.putString("lName", ds.child("lName").getValue(String.class));
@@ -199,11 +194,12 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
             }
         });
-
+        Intent newIntent = new Intent(this, MainActivity.class);
         startActivity(newIntent);
 
     }
 
+    // convert address to geocode
     public LatLng getLocationFromAddress(Context context,String strAddress) {
 
         Geocoder coder = new Geocoder(context);
